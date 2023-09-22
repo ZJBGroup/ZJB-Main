@@ -9,6 +9,7 @@ from traits.api import (
     Union,
 )
 
+from zjb._traits.types import Instance
 from zjb.dos.data import Data
 from zjb.main.trait_types import FloatVector
 
@@ -32,11 +33,11 @@ class TransientVariable(HasExpression):
 class DynamicModel(Data):
     name = Str()
 
-    state_variables = Dict(Str, StateVariable)
+    state_variables = Dict(Str, Instance(StateVariable))
 
-    coupling_variables = Dict(Str, CouplingVariable)
+    coupling_variables = Dict(Str, Instance(CouplingVariable))
 
-    transient_variables = Dict(Str, TransientVariable)
+    transient_variables = Dict(Str, Instance(TransientVariable))
 
     parameters = Dict(Str, Union(Float, FloatVector))
 
