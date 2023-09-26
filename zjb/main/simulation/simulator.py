@@ -16,7 +16,7 @@ from traits.api import (
 from zjb._traits.types import Instance
 
 from ..data.correlation import SpaceCorrelation
-from ..dtb.dynamic_model import DynamicModel
+from ..dtb.dynamics_model import DynamicsModel
 from ..trait_types import FloatVector
 from .monitor import Monitor
 from .solver import EulerSolver, Solver
@@ -27,7 +27,7 @@ TEMPLATE = Template(
 
 
 class Simulator(HasPrivateTraits, HasRequiredTraits):
-    model = Instance(DynamicModel, required=True)
+    model = Instance(DynamicsModel, required=True)
 
     states = Dict(Str, Union(Float, FloatVector))
 

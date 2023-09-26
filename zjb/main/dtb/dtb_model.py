@@ -4,7 +4,7 @@ from zjb._traits.types import Instance
 from zjb.dos.data import Data
 
 from .atlas import Atlas
-from .dynamic_model import DynamicModel
+from .dynamics_model import DynamicsModel
 
 
 class DTBModel(Data):
@@ -12,6 +12,6 @@ class DTBModel(Data):
 
     atlas = Instance(Atlas, required=True)
 
-    dynamic = Instance(DynamicModel, required=True)
+    dynamics = Instance(DynamicsModel, required=True)
 
     parameters = Dict(Str, Any)

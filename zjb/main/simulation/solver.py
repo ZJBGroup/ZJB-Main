@@ -4,7 +4,7 @@ from pathlib import Path
 from mako.template import Template
 from traits.api import ABCMetaHasTraits, Float, HasPrivateTraits
 
-from ..dtb.dynamic_model import DynamicModel
+from ..dtb.dynamics_model import DynamicsModel
 
 TEMPLATE = Template(filename=str(Path(__file__).parent / "_templates" / "solvers.mako"))
 
@@ -13,10 +13,10 @@ class Solver(HasPrivateTraits, metaclass=ABCMetaHasTraits):
     dt = Float(0.1)
 
     @abstractmethod
-    def render(self, model: DynamicModel) -> str:
+    def render(self, model: DynamicsModel) -> str:
         ...
 
 
 class EulerSolver(Solver):
-    def render(self, model: DynamicModel) -> str:
+    def render(self, model: DynamicsModel) -> str:
         return TEMPLATE.get_def("euler").render(model=model)  # type: ignore

@@ -1,4 +1,10 @@
+import brainpy as bp
+import brainpy.math as bm
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
 from traits.api import (
+    Any,
     Dict,
     Expression,
     Float,
@@ -6,19 +12,12 @@ from traits.api import (
     HasRequiredTraits,
     List,
     Str,
-    Union,
     Subclass,
-    Any,
+    Union,
 )
 
-import numpy as np
-from matplotlib import pyplot as plt
-from matplotlib.figure import Figure
-import brainpy as bp
-import brainpy.math as bm
-
-from zjb.dos.data import Data
 from zjb._traits.types import Instance
+from zjb.dos.data import Data
 from zjb.main.trait_types import FloatVector
 
 
@@ -38,7 +37,7 @@ class TransientVariable(HasExpression):
     pass
 
 
-class DynamicModel(Data):
+class DynamicsModel(Data):
     name = Str()
 
     state_variables = Dict(Str, Instance(StateVariable))
@@ -88,11 +87,11 @@ class DynamicModel(Data):
         return bifurcation_analyse(show)
 
 
-class DefineExpression():
+class DefineExpression:
     """Model表达式"""
 
     @classmethod
-    def var_expression(cls, model: DynamicModel, var_name: str):
+    def var_expression(cls, model: DynamicsModel, var_name: str):
         """Model状态变量表达式"""
 
         # state_variables
@@ -134,7 +133,7 @@ def d{var_name}({variables}, {parameters} {coupling}):
 class ModelTypesetter(bp.DynamicalSystem):
     """Model的公式排版器，提取解析式"""
 
-    def __init__(self, model: DynamicModel, method="exp_auto"):
+    def __init__(self, model: DynamicsModel, method="exp_auto"):
         super(ModelTypesetter, self).__init__()
 
         # parameter
@@ -200,7 +199,7 @@ class Bifurcation_2D(bp.analysis.Bifurcation2D):
 
 
 class PhasePlanePlots(Plots):
-    dynamicModel = Instance(DynamicModel)
+    dynamicsModel = Instance(DynamicsModel)
 
     target_vars = Dict()
 
@@ -218,7 +217,7 @@ class PhasePlanePlots(Plots):
 class BifurcationPlots(Plots):
     figure2 = Instance(Figure)  # 2D分岔分析会产生2副分岔图
 
-    dynamicModel = Instance(DynamicModel)
+    dynamicsModel = Instance(DynamicsModel)
 
     target_vars = Dict()
 
@@ -232,7 +231,7 @@ class BifurcationPlots(Plots):
 class PhasePlaneFunc(HasPrivateTraits):
     """对Model进行相平面分析"""
 
-    model: DynamicModel = Instance(DynamicModel, input=True)
+    model: DynamicsModel = Instance(DynamicsModel, input=True)
 
     ppanalyzer: PhasePlaneAnalyzer = Subclass(PhasePlaneAnalyzer, ModelTypesetter)
 
@@ -279,7 +278,7 @@ class PhasePlaneFunc(HasPrivateTraits):
         return PhasePlanePlots(
             name="phase plane results",
             figure=analyzer.show_figure_data(),
-            dynamicModel=self.model,
+            dynamicsModel=self.model,
             target_vars=self.target_vars,
             fixed_vars=self.fixed_vars,
             resolutions=self.resolutions,
@@ -292,7 +291,7 @@ class PhasePlaneFunc(HasPrivateTraits):
 class BifurcationFunc(HasPrivateTraits):
     """对Model进行分岔分析"""
 
-    model: DynamicModel = Instance(DynamicModel, input=True)
+    model: DynamicsModel = Instance(DynamicsModel, input=True)
 
     bifurcation_analyzer: BifurcationAnalyzer = Subclass(
         BifurcationAnalyzer, ModelTypesetter
@@ -333,7 +332,7 @@ class BifurcationFunc(HasPrivateTraits):
             name="Bifurcation analysis results",
             figure=fig1,
             figure2=fig2,
-            dynamicModel=self.model,
+            dynamicsModel=self.model,
             target_vars=self.target_vars,
             fixed_vars=self.fixed_vars,
             target_pars=self.target_pars,
@@ -345,7 +344,7 @@ if __name__ == "__main__":
     # 测试动力学分析
 
     # 创建测试模型
-    dynamic = DynamicModel()
+    dynamic = DynamicsModel()
 
     dynamic.state_variables = {
         "x": StateVariable(expression="ax2y2 * x - omega * y + Gx"),
