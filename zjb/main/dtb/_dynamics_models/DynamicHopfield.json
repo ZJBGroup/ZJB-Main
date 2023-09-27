@@ -1,0 +1,28 @@
+{
+    "name": "DynamicHopfield",
+    "state_variables": {
+        "x": {
+            "expression": "(-x + C) / taux"
+        },
+        "theta": {
+            "expression": "(-theta + C2) / tauT"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ x"
+        },
+        "C2": {
+            "expression": "__C @ theta"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "taux": 1.0,
+        "tauT": 5.0
+    },
+    "references": [
+        "[Hopfield1982] Hopfield, J. J., *Neural networks and physical systems with emergent collective computational abilities*, Proc. Nat. Acad. Sci. (USA) 79, 2554-2558, 1982.",
+        "Hopfield1984] Hopfield, J. J., *Neurons with graded response have collective computational properties like those of two-sate neurons*, Proc. Nat. Acad. Sci. (USA) 81, 3088-3092, 1984."
+    ]
+}

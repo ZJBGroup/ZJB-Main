@@ -1,0 +1,48 @@
+{
+    "name": "Epileptor2D",
+    "state_variables": {
+        "x1": {
+            "expression": "tt * (c - z + Iext + Kvf * C - f1)"
+        },
+        "z": {
+            "expression": "tt * (r * (h - z + Ks * C))"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ x1 - __C_1 * x1"
+        }
+    },
+    "transient_variables": {
+        "x1_mask": {
+            "expression": "x1 < 0"
+        },
+        "f1": {
+            "expression": "x1_mask * (a * x1 ** 3 + (d - b) * x1 * x1) + (1 - x1_mask) * ((- slope - 0.6 * (z-4)**2 + d * x1) * x1)"
+        },
+        "z_mask": {
+            "expression": "z < 0"
+        },
+        "h": {
+            "expression": "modification * (x0 + 3 / (1 + np.exp(- (x1 + 0.5) / 0.1))) + (1 - modification) * (4 * (x1 - x0) + z_mask * (-0.1 * z **7))"
+        }
+    },
+    "parameters": {
+        "a": 1.0,
+        "b": 3.0,
+        "c": 1.0,
+        "d": 5.0,
+        "r": 0.00035,
+        "x0": -1.6,
+        "Iext": 3.1,
+        "slope": 0.0,
+        "Kvf": 0.0,
+        "Ks": 0.0,
+        "tt": 1.0,
+        "modification": 0.0
+    },
+    "references": [
+        "[Proixetal_2014] Proix, T.; Bartolomei, F; Chauvel, P; Bernard, C; Jirsa, V.K. *Permittivity coupling across brain regions determines seizure recruitment in partial epilepsy.* J Neurosci 2014, 34:15009-21.",
+        "[Proixetal_2017] Proix, T.; Bartolomei, F; Guye, M.; Jirsa, V.K. *Individual brain structure and modelling predict seizure propagation.* Brain 2017, 140; 641\u2013654."
+    ]
+}

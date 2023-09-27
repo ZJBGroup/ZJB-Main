@@ -1,0 +1,78 @@
+{
+    "name": "LarterBreakspear",
+    "state_variables": {
+        "V": {
+            "expression": "t_scale * (- (gCa + (1.0 - C) * (rNMDA * aee) * QV + C * rNMDA * aee * C0) * m_Ca * (V - VCa) - gK * W * (V - VK) - gL * (V - VL) - (gNa * m_Na + (1.0 - C) * aee * QV + C * aee * C0) * (V - VNa) - aie * Z * QZ + ane * Iext)"
+        },
+        "W": {
+            "expression": "t_scale * phi * (m_K - W) / tau_K"
+        },
+        "Z": {
+            "expression": "t_scale * b * (ani * Iext + aei * V * QV)"
+        }
+    },
+    "coupling_variables": {
+        "C0": {
+            "expression": "__C @ V"
+        }
+    },
+    "transient_variables": {
+        "m_Ca": {
+            "expression": "0.5 * (1 + np.tanh((V - TCa) / d_Ca))"
+        },
+        "m_Na": {
+            "expression": "0.5 * (1 + np.tanh((V - TNa) / d_Na))"
+        },
+        "m_K": {
+            "expression": "0.5 * (1 + np.tanh((V - TK) / d_K))"
+        },
+        "QV": {
+            "expression": "0.5 * QV_max * (1 + np.tanh((V - VT) / d_V))"
+        },
+        "QZ": {
+            "expression": "0.5 * QZ_max * (1 + np.tanh((Z - ZT) / d_Z))"
+        }
+    },
+    "parameters": {
+        "gCa": 1.1,
+        "gK": 2.0,
+        "gL": 0.5,
+        "phi": 0.7,
+        "gNa": 6.7,
+        "TK": 0.0,
+        "TCa": -0.01,
+        "TNa": 0.3,
+        "VCa": 1.0,
+        "VK": -0.7,
+        "VL": -0.5,
+        "VNa": 0.53,
+        "d_K": 0.3,
+        "tau_K": 1.0,
+        "d_Na": 0.15,
+        "d_Ca": 0.15,
+        "aei": 2.0,
+        "aie": 2.0,
+        "b": 0.1,
+        "C": 0.1,
+        "ane": 1.0,
+        "ani": 0.4,
+        "aee": 0.4,
+        "Iext": 0.3,
+        "rNMDA": 0.25,
+        "VT": 0.0,
+        "d_V": 0.65,
+        "ZT": 0.0,
+        "d_Z": 0.7,
+        "QV_max": 1.0,
+        "QZ_max": 1.0,
+        "t_scale": 1.0
+    },
+    "references": [
+        "[Larteretal_1999] Larter et.al. *A coupled ordinary differential equation lattice model for the simulation of epileptic seizures.* Chaos. 9(3):795, 1999.",
+        "[Breaksetal_2003_a] Breakspear, M.; Terry, J. R. & Friston, K. J.  *Modulation of excitatory synaptic coupling facilitates synchronization and complex dynamics in an onlinear model of neuronal dynamics*. Neurocomputing 52\u201354 (2003).151\u2013158",
+        "[Breaksetal_2003_b] M. J. Breakspear et.al. *Modulation of excitatory synaptic coupling facilitates synchronization and complex dynamics in a biophysical model of neuronal dynamics.* Network: Computation in Neural Systems 14: 703-732, 2003.",
+        "[Honeyetal_2007] Honey, C.; K\u00f6tter, R.; Breakspear, M. & Sporns, O. * Network structure of cerebral cortex shapes functional connectivity on multiple time scales*. (2007) PNAS, 104, 10240",
+        "[Honeyetal_2009] Honey, C. J.; Sporns, O.; Cammoun, L.; Gigandet, X.; Thiran, J. P.; Meuli, R. & Hagmann, P. *Predicting human resting-state functional connectivity from structural connectivity.* (2009), PNAS, 106, 2035-2040",
+        "[Alstottetal_2009] Alstott, J.; Breakspear, M.; Hagmann, P.; Cammoun, L. & Sporns, O. *Modeling the impact of lesions in the human brain*. (2009)),  PLoS Comput Biol, 5, e1000408"
+    ]
+}

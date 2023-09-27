@@ -1,0 +1,121 @@
+{
+    "name": "KIonEx",
+    "state_variables": {
+        "x": {
+            "expression": "Delta - J * r * x + V_mask * (2 * R_minus * (V - c_minus) * x) + (1 - V_mask) * (2 * R_plus * (V - c_plus) * x)"
+        },
+        "V": {
+            "expression": "(-1.0 / Cm) * (I_Na + I_K + I_Cl + I_pump) + eta + (R_minus / np.pi) * C * (E - V) + V_mask * (- R_minus * x * x) + (1 - V_mask) * (- R_plus * x * x)"
+        },
+        "n": {
+            "expression": "(ninf - n) / tau_n"
+        },
+        "DKi": {
+            "expression": "- (gamma / w_i) * (I_K - 2.0 * I_pump)"
+        },
+        "Kg": {
+            "expression": "epsilon * (K_bath - K_o)"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ x"
+        }
+    },
+    "transient_variables": {
+        "beta": {
+            "expression": "w_i / w_o"
+        },
+        "DNa_i": {
+            "expression": "- DKi"
+        },
+        "DNa_o": {
+            "expression": "- beta * DNa_i"
+        },
+        "DK_o": {
+            "expression": "- beta * DKi"
+        },
+        "K_i": {
+            "expression": "K_i0 + DKi"
+        },
+        "Na_i": {
+            "expression": "Na_i0 + DNa_i"
+        },
+        "Na_o": {
+            "expression": "Na_o0 + DNa_o"
+        },
+        "K_o": {
+            "expression": "K_o0 + DK_o + Kg"
+        },
+        "ninf": {
+            "expression": "1.0 / (1.0 + np.exp((Cnk - V) / DCnk))"
+        },
+        "I_K": {
+            "expression": "(g_Kl + g_K * n) * (V - 26.64 * np.log(K_o / K_i))"
+        },
+        "m_inf": {
+            "expression": "1.0 / (1.0 + np.exp((Cmna - V) / DCmna))"
+        },
+        "h": {
+            "expression": "1.1 - 1.0 / (1.0 + np.exp(-8.0 * (n - 0.4)))"
+        },
+        "I_Na": {
+            "expression": "(g_Nal + g_Na * m_inf * h) * (V - 26.64 * np.log(Na_o / Na_i))"
+        },
+        "I_Cl": {
+            "expression": "g_Cl * (V + 26.64 * np.log(Cl_o0 / Cl_i0)) "
+        },
+        "I_pump": {
+            "expression": "rho * (1.0 / (1.0 + np.exp((Cnap - Na_i) / DCnap)) * (1.0 / (1.0 + np.exp((Ckp - K_o) / DCkp)))) "
+        },
+        "r": {
+            "expression": "R_minus * x / np.pi"
+        },
+        "V_mask": {
+            "expression": "V <= Vstar"
+        }
+    },
+    "parameters": {
+        "E": 0.0,
+        "K_bath": 5.5,
+        "J": 0.1,
+        "eta": 0.0,
+        "Delta": 1.0,
+        "c_minus": -40.0,
+        "R_minus": 0.5,
+        "c_plus": -20.0,
+        "R_plus": -0.5,
+        "Vstar": -31.0,
+        "Cm": 1.0,
+        "tau_n": 4.0,
+        "gamma": 0.04,
+        "epsilon": 0.001,
+        "Cnap": 21.0,
+        "DCnap": 2.0,
+        "Ckp": 5.5,
+        "DCkp": 1.0,
+        "Cmna": -24.0,
+        "DCmna": 12.0,
+        "Chn": 0.4,
+        "DChn": -8.0,
+        "Cnk": -19.0,
+        "DCnk": 18.0,
+        "g_Cl": 7.5,
+        "g_Na": 40.0,
+        "g_K": 22.0,
+        "g_Nal": 0.02,
+        "g_Kl": 0.12,
+        "rho": 250.0,
+        "w_i": 2160.0,
+        "w_o": 720.0,
+        "Na_i0": 16.0,
+        "Na_o0": 138.0,
+        "K_i0": 130.0,
+        "K_o0": 4.8,
+        "Cl_i0": 5.0,
+        "Cl_o0": 112.0
+    },
+    "references": [
+        "Bandyopadhyay & Rabuffo et al. 2023"
+    ]
+}

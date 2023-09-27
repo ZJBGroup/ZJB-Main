@@ -1,0 +1,59 @@
+{
+    "name": "WilsonCowan",
+    "state_variables": {
+        "E": {
+            "expression": "(-E + (k_e - r_e * E) * s_e) / tau_e"
+        },
+        "I": {
+            "expression": "(-I + (k_i - r_i * I) * s_i) / tau_i"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ E - __C_1 * E"
+        }
+    },
+    "transient_variables": {
+        "x_e": {
+            "expression": "alpha_e * (c_ee * E - c_ei * I + P - theta_e + C)"
+        },
+        "x_i": {
+            "expression": "alpha_i * (c_ie * E - c_ii * I + Q - theta_i)"
+        },
+        "s_e": {
+            "expression": "c_e * (1.0 / (1.0 + np.exp(-a_e * (x_e - b_e))) - 1.0 / (1.0 + np.exp(-a_e * -b_e)))"
+        },
+        "s_i": {
+            "expression": "c_i * (1.0 / (1.0 + np.exp(-a_i * (x_i - b_i))) - 1.0 / (1.0 + np.exp(-a_i * -b_i)))"
+        }
+    },
+    "parameters": {
+        "c_ee": 12.0,
+        "c_ei": 4.0,
+        "c_ie": 13.0,
+        "c_ii": 11.0,
+        "tau_e": 10.0,
+        "tau_i": 10.0,
+        "a_e": 1.2,
+        "b_e": 2.8,
+        "c_e": 1.0,
+        "theta_e": 0.0,
+        "a_i": 1.0,
+        "b_i": 4.0,
+        "theta_i": 0.0,
+        "c_i": 1.0,
+        "r_e": 1.0,
+        "r_i": 1.0,
+        "k_e": 1.0,
+        "k_i": 1.0,
+        "P": 0.0,
+        "Q": 0.0,
+        "alpha_e": 1.0,
+        "alpha_i": 1.0
+    },
+    "references": [
+        "[WC_1972] Wilson, H.R. and Cowan, J.D. *Excitatory and inhibitory interactions in localized populations of model neurons*, Biophysical journal, 12: 1-24, 1972.",
+        "[WC_1973] Wilson, H.R. and Cowan, J.D  *A Mathematical Theory of the Functional Dynamics of Cortical and Thalamic Nervous Tissue*",
+        "[D_2011] Daffertshofer, A. and van Wijk, B. *On the influence of amplitude on the connectivity between phases* Frontiers in Neuroinformatics, July, 2011"
+    ]
+}

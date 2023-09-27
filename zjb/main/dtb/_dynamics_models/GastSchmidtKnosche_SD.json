@@ -1,0 +1,40 @@
+{
+    "name": "GastSchmidtKnosche_SD",
+    "state_variables": {
+        "r": {
+            "expression": "(Delta / (np.pi * tau) + 2 * V * r) / tau"
+        },
+        "V": {
+            "expression": "(V * V - np.pi * np.pi * tau * tau * r * r + eta + J * tau * r * (1 - A) + I + cr * Cr + cv * CV) / tau"
+        },
+        "A": {
+            "expression": "B / tau_A"
+        },
+        "B": {
+            "expression": "(-2 * B - A + alpha * r) / tau_A"
+        }
+    },
+    "coupling_variables": {
+        "Cr": {
+            "expression": "__C @ r"
+        },
+        "CV": {
+            "expression": "__C @ V"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "tau": 1.0,
+        "tau_A": 10.0,
+        "alpha": 0.5,
+        "I": 0.0,
+        "Delta": 2.0,
+        "J": 21.2132,
+        "eta": -6.0,
+        "cr": 1.0,
+        "cv": 0.0
+    },
+    "references": [
+        "[Gastetal_2020] Gast, R., Schmidt, H., & Kn\u00f6sche, T. R. (2020). A mean-field description of bursting dynamics in spiking neural networks with short-term adaptation. *Neural Computation*, 32(9), 1615-1634."
+    ]
+}

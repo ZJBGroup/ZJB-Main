@@ -1,0 +1,54 @@
+{
+    "name": "DumontGutkin",
+    "state_variables": {
+        "r_e": {
+            "expression": "(Delta_e / (np.pi * tau_e) + 2 * V_e * r_e) / tau_e"
+        },
+        "V_e": {
+            "expression": "(V_e * V_e + eta_e - tau_e * tau_e * np.pi * np.pi * r_e * r_e + tau_e * s_ee - tau_e * s_ei + I_e) / tau_e"
+        },
+        "s_ee": {
+            "expression": "(-s_ee + J_ee * r_e + C) / tau_s"
+        },
+        "s_ei": {
+            "expression": "(-s_ei + J_ei * r_i) / tau_s"
+        },
+        "r_i": {
+            "expression": "(Delta_i / (np.pi * tau_i) + 2 * V_i * r_i) / tau_i"
+        },
+        "V_i": {
+            "expression": "(V_i * V_i + eta_i - tau_i * tau_i * np.pi * np.pi * r_i * r_i + tau_i * s_ie - tau_i * s_ii + I_i) / tau_i"
+        },
+        "s_ie": {
+            "expression": "(-s_ie + J_ie * r_e + Gamma * C) / tau_s"
+        },
+        "s_ii": {
+            "expression": "(-s_ii + J_ii * r_i) / tau_s"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ r_e"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "I_e": 0.0,
+        "Delta_e": 1.0,
+        "eta_e": -5.0,
+        "tau_e": 10.0,
+        "I_i": 0.0,
+        "Delta_i": 1.0,
+        "eta_i": -5.0,
+        "tau_i": 10.0,
+        "tau_s": 1.0,
+        "J_ee": 0.0,
+        "J_ei": 10.0,
+        "J_ie": 0.0,
+        "J_ii": 15.0,
+        "Gamma": 5.0
+    },
+    "references": [
+        "[DumontGutkin2019] Dumont, G., & Gutkin, B. (2019). Macroscopic phase resetting-curves determine oscillatory coherence and signal transfer in inter-coupled neural circuits. PLoS computational biology, 15(5), e1007019."
+    ]
+}

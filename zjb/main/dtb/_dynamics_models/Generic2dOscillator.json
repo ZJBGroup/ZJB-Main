@@ -1,0 +1,38 @@
+{
+    "name": "Generic2dOscillator",
+    "state_variables": {
+        "V": {
+            "expression": "d * tau * (alpha * W - f * V**3 + e * V**2 + g * V + gamma * I + gamma * C)"
+        },
+        "W": {
+            "expression": "d * (a + b * V + c * V**2 - beta * W) / tau"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ V"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "tau": 1.0,
+        "I": 0.0,
+        "a": -2.0,
+        "b": -10.0,
+        "c": 0.0,
+        "d": 0.02,
+        "e": 3.0,
+        "f": 1.0,
+        "g": 0.0,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "gamma": 1.0
+    },
+    "references": [
+        "[FH_1961] FitzHugh, R., *Impulses and physiological states in theoretical models of nerve membrane*, Biophysical Journal 1: 445, 1961.",
+        "[Nagumo_1962] Nagumo et.al, *An Active Pulse Transmission Line Simulating Nerve Axon*, Proceedings of the IRE 50: 2061, 1962.",
+        "[SJ_2011] Stefanescu, R., Jirsa, V.K. *Reduced representations of heterogeneous mixed neural networks with synaptic coupling*.",
+        "[SJ_2010]\tJirsa VK, Stefanescu R.  *Neural population modes capture biologically realistic large-scale network dynamics*. Bulletin of Mathematical Biology, 2010.",
+        "[SJ_2008_a] Stefanescu, R., Jirsa, V.K. *A low dimensional description of globally coupled heterogeneous neural networks of excitatory and inhibitory neurons*. PLoS Computational Biology, 4(11), 2008)."
+    ]
+}

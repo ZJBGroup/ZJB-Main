@@ -1,0 +1,18 @@
+{
+    "name": "Linear",
+    "state_variables": {
+        "x": {
+            "expression": "gamma * x + C"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ x"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "gamma": -10.0
+    },
+    "references": []
+}

@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 import brainpy as bp
 import brainpy.math as bm
 import numpy as np
@@ -18,7 +21,8 @@ from traits.api import (
 
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
-from zjb.main.trait_types import FloatVector
+
+from ..trait_types import FloatVector
 
 
 class HasExpression(HasPrivateTraits, HasRequiredTraits):
@@ -49,6 +53,31 @@ class DynamicsModel(Data):
     parameters = Dict(Str, Union(Float, FloatVector))
 
     references = List(Str)
+
+    @classmethod
+    def from_file(cls, filename: str):
+        with open(filename) as f:
+            obj = json.load(f)
+        obj["state_variables"] = {
+            name: StateVariable(**state)
+            for name, state in obj["state_variables"].items()
+        }
+        obj["coupling_variables"] = {
+            name: CouplingVariable(**coupling)
+            for name, coupling in obj["coupling_variables"].items()
+        }
+        obj["transient_variables"] = {
+            name: TransientVariable(**transient)
+            for name, transient in obj["transient_variables"].items()
+        }
+        return cls(**obj)
+
+    @classmethod
+    def from_name(cls, name: str):
+        file = Path(__file__).parent / "_dynamics_models" / f"{name}.json"
+        if not file.exists():
+            raise ValueError(f"{name} not found.")
+        return cls.from_file(str(file))
 
     def phase_plane_analyse(
         self,

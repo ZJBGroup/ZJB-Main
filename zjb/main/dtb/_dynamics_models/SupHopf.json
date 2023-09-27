@@ -1,0 +1,28 @@
+{
+    "name": "SupHopf",
+    "state_variables": {
+        "x": {
+            "expression": "(a - x * x - y * y) * x - omega * y + Gx"
+        },
+        "y": {
+            "expression": "(a - x * x - y * y) * y + omega * x + Gy"
+        }
+    },
+    "coupling_variables": {
+        "Gx": {
+            "expression": "__C @ x - __C_1 * x"
+        },
+        "Gy": {
+            "expression": "__C @ y - __C_1 * y"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "a": -0.5,
+        "omega": 1.0
+    },
+    "references": [
+        "[Kuznetsov_2013] Kuznetsov, Y.A. *Elements of applied bifurcation theory.* Springer Sci & Business Media, 2013, vol. 112.",
+        "[Deco_2017a] Deco, G., Kringelbach, M.L., Jirsa, V.K., Ritter, P. *The dynamics of resting fluctuations in the brain: metastability and its dynamical cortical core* Sci Reports, 2017, 7: 3095."
+    ]
+}

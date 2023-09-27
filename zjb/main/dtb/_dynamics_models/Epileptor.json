@@ -1,0 +1,71 @@
+{
+    "name": "Epileptor",
+    "state_variables": {
+        "x1": {
+            "expression": "tt * (y1 - f1 - z + Iext + Kvf * C)"
+        },
+        "y1": {
+            "expression": "tt * (c - d * x1 * x1 - y1)"
+        },
+        "z": {
+            "expression": "tt * (r * (h - z + Ks * C))"
+        },
+        "x2": {
+            "expression": "tt * (-y2 + x2 - x2 ** 3 + Iext2 + bb * g - 0.3 * (z - 3.5) + Kf *C2)"
+        },
+        "y2": {
+            "expression": "tt * ((-y2 + f2) / tau)"
+        },
+        "g": {
+            "expression": "tt * (-0.01 * (g - 0.1 * x1))"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ x1 - __C_1 * x1"
+        },
+        "C2": {
+            "expression": "__C @ x2 - __C_1 * x2"
+        }
+    },
+    "transient_variables": {
+        "x1_mask": {
+            "expression": "x1 < 0"
+        },
+        "f1": {
+            "expression": "x1_mask * (a * x1 ** 3 - b * x1 * x1) + (1 - x1_mask) * (-(slope - x2 + 0.6 * (z-4)**2) * x1)"
+        },
+        "z_mask": {
+            "expression": "z < 0"
+        },
+        "h": {
+            "expression": "modification * (x0 + 3 / (1 + np.exp(- (x1 + 0.5) / 0.1))) + (1 - modification) * (4 * (x1 - x0) + z_mask * (-0.1 * z **7))"
+        },
+        "f2": {
+            "expression": "(x2 >= -0.25) * (aa * (x2 + 0.25))"
+        }
+    },
+    "parameters": {
+        "a": 1.0,
+        "b": 3.0,
+        "c": 1.0,
+        "d": 5.0,
+        "r": 0.00035,
+        "x0": -1.6,
+        "Iext": 3.1,
+        "slope": 0.0,
+        "Iext2": 0.45,
+        "tau": 10.0,
+        "aa": 6.0,
+        "bb": 2.0,
+        "Kvf": 0.0,
+        "Kf": 0.0,
+        "Ks": 0.0,
+        "tt": 1.0,
+        "modification": 0.0
+    },
+    "references": [
+        "[Jirsaetal_2014] Jirsa, V. K.; Stacey, W. C.; Quilichini, P. P.; Ivanov, A. I.; Bernard, C. *On the nature of seizure dynamics.* Brain, 2014.",
+        "[Proixetal_2014] Proix, T.; Bartolomei, F; Chauvel, P; Bernard, C; Jirsa, V.K. *Permittivity coupling across brain regions determines seizure recruitment in partial epilepsy.* J Neurosci 2014, 34:15009-21."
+    ]
+}

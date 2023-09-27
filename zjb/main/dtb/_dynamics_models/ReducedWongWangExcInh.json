@@ -1,0 +1,61 @@
+{
+    "name": "ReducedWongWangExcInh",
+    "state_variables": {
+        "S_e": {
+            "expression": "-S_e / tau_e + (1 - S_e) * gamma_e * r_e"
+        },
+        "S_i": {
+            "expression": "-S_i / tau_i + gamma_i * r_i"
+        }
+    },
+    "coupling_variables": {
+        "C": {
+            "expression": "__C @ S_e"
+        }
+    },
+    "transient_variables": {
+        "I_e": {
+            "expression": "W_e * I_0 + w_p * J_N * S_e + G * J_N * C - J_i * S_i + I_ext"
+        },
+        "sI_e": {
+            "expression": "a_e * I_e - b_e"
+        },
+        "r_e": {
+            "expression": "sI_e / (1 - np.exp(- d_e * sI_e))"
+        },
+        "I_i": {
+            "expression": "W_i * I_0 + J_N * S_e - S_i + lamda * G * J_N * C"
+        },
+        "sI_i": {
+            "expression": "a_i * I_i - b_i"
+        },
+        "r_i": {
+            "expression": "sI_i / (1 - np.exp(- d_i * sI_i))"
+        }
+    },
+    "parameters": {
+        "a_e": 310.0,
+        "b_e": 125.0,
+        "d_e": 0.16,
+        "gamma_e": 0.000641,
+        "tau_e": 100.0,
+        "w_p": 1.4,
+        "J_N": 0.15,
+        "W_e": 1.0,
+        "a_i": 615.0,
+        "b_i": 177.0,
+        "d_i": 0.087,
+        "gamma_i": 0.001,
+        "tau_i": 10.0,
+        "J_i": 1.0,
+        "W_i": 0.7,
+        "I_0": 0.382,
+        "I_ext": 0.0,
+        "G": 2.0,
+        "lamda": 0.0
+    },
+    "references": [
+        "[WW_2006] Kong-Fatt Wong and Xiao-Jing Wang,  *A Recurrent Network Mechanism of Time Integration in Perceptual Decisions*. Journal of Neuroscience 26(4), 1314-1328, 2006.",
+        "[DPA_2014] Deco Gustavo, Ponce Alvarez Adrian, Patric Hagmann, Gian Luca Romani, Dante Mantini, and Maurizio Corbetta. *How Local Excitation\u2013Inhibition Ratio Impacts the Whole Brain Dynamics*. The Journal of Neuroscience 34(23), 7886 \u20137898, 2014."
+    ]
+}

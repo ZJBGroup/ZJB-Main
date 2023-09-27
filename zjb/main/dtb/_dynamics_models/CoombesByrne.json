@@ -1,0 +1,33 @@
+{
+    "name": "CoombesByrne",
+    "state_variables": {
+        "r": {
+            "expression": "Delta / np.pi + 2 * V * r - g * r * r"
+        },
+        "V": {
+            "expression": "V * V - np.pi * np.pi * r * r + eta + (v_syn - V) * g + Cr"
+        },
+        "g": {
+            "expression": "alpha * q"
+        },
+        "q": {
+            "expression": "alpha * (k * np.pi * r - g - 2 * q)"
+        }
+    },
+    "coupling_variables": {
+        "Cr": {
+            "expression": "__C @ r"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "Delta": 0.5,
+        "alpha": 0.95,
+        "v_syn": -10.0,
+        "k": 1.0,
+        "eta": 20.0
+    },
+    "references": [
+        "[Coombes_Byrne_2019] Coombes, S., & Byrne, \u00c1. (2019). Next generation neural mass models. In *Nonlinear Dynamics in Computational Neuroscience* (pp. 1-16). Springer, Cham."
+    ]
+}

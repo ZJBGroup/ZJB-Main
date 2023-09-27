@@ -1,0 +1,33 @@
+{
+    "name": "MontbrioPazoRoxin",
+    "state_variables": {
+        "r": {
+            "expression": "(Delta / (np.pi * tau) + 2 * V * r) / tau"
+        },
+        "V": {
+            "expression": "(V * V - np.pi * np.pi * tau * tau * r * r + eta + J * tau * r + I + cr * Cr + cv * CV) / tau"
+        }
+    },
+    "coupling_variables": {
+        "Cr": {
+            "expression": "__C @ r"
+        },
+        "CV": {
+            "expression": "__C @ V"
+        }
+    },
+    "transient_variables": {},
+    "parameters": {
+        "tau": 1.0,
+        "I": 1.0,
+        "Delta": 1.0,
+        "J": 15.0,
+        "eta": -5.0,
+        "Gamma": 0.0,
+        "cr": 1.0,
+        "cv": 0.0
+    },
+    "references": [
+        "[Montbrio_Pazo_Roxin_2015] Montbri\u00f3, E., Paz\u00f3, D., & Roxin, A. (2015). Macroscopic description for networks of spiking neurons. *Physical Review X*, 5(2), 021028."
+    ]
+}
