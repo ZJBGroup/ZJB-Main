@@ -1,5 +1,4 @@
 <%!
-    import re
     def indent(text):
         return text.replace("\n", "\n    ")
     def indent2(text):
@@ -24,14 +23,14 @@ def simulator(
     % endfor
 
     % for i, monitor in enumerate(monitors):
-    ${monitor.render_init(f'_m{i}') | indent}
+    ${monitor.render_init(f'_m{i}', env) | indent}
     % endfor
 
     for __it in range(__nt):
-        ${solver.render(model) | indent2}
+        ${solver.render(model, env) | indent2}
 
         % for i, monitor in enumerate(monitors):
-        ${monitor.render_sample(f'_m{i}') | indent2}
+        ${monitor.render_sample(f'_m{i}', env) | indent2}
         % endfor
 
     return (

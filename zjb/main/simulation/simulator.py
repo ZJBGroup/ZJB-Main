@@ -57,18 +57,18 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
             | self.parameters
         )
 
+        self._env: dict[str, Any] = {}
         self._code = TEMPLATE.render(  # type: ignore
-            solver=self.solver, monitors=self.monitors, model=self.model
+            solver=self.solver, monitors=self.monitors, model=self.model, env=self._env
         )
-        _env: dict[str, Any] = {}
-        exec(self._code, _env)
+        exec(self._code, self._env)
         self._simulator: Callable[
             ...,
             tuple[
                 tuple[np.ndarray[Any, Any], ...],
                 tuple[np.ndarray[Any, Any], ...],
             ],
-        ] = _env["simulator"]
+        ] = self._env["simulator"]
 
     def __call__(self):
         if self._simulator is None:  # type: ignore
