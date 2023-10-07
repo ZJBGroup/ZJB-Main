@@ -16,13 +16,10 @@ from traits.api import (
     List,
     Str,
     Subclass,
-    Union,
 )
 
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
-
-from ..trait_types import FloatVector
 
 
 class HasExpression(HasPrivateTraits, HasRequiredTraits):
@@ -50,7 +47,7 @@ class DynamicsModel(Data):
 
     transient_variables = Dict(Str, Instance(TransientVariable))
 
-    parameters = Dict(Str, Union(Float, FloatVector))
+    parameters = Dict(Str, Float)
 
     references = List(Str)
 
