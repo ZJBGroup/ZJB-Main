@@ -1,11 +1,13 @@
+import pickle
+
 import numpy as np
-from traits.api import Str
+from traits.api import Array, Str
 
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
 
 from ..data.space import Space
-from ..trait_types import StrVector
+from ..trait_types import FloatVector, StrVector
 
 
 class Atlas(Data):
@@ -13,15 +15,17 @@ class Atlas(Data):
 
     labels = StrVector
 
+    areas = FloatVector
+
+    def save_file(self, file_path):
+        with open(file_path, "wb") as f:
+            pickle.dump(self, f)
+
     @classmethod
-    def from_file(cls, atlas_file_path, atlas_name):
-        result = Atlas()
-        # 从文件路径中读取脑区列表的.npy文件
-        result.labels= np.load(atlas_file_path)
-
-        result.name = atlas_name
-
-        return result
+    def from_file(cls, file_path):
+        with open(file_path, "rb") as f:
+            cls = pickle.load(f)
+        return cls
 
 
 class RegionSpace(Space):

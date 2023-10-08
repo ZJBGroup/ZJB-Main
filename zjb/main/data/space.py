@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 from traits.api import Array, Float, Int, List, Str
 
@@ -36,11 +38,12 @@ class Surface(Data):
 
     faces = Array(dtype=int, shape=(None, 3))
 
-    @classmethod
-    def from_file(cls, vertices_file_path, faces_file_path):
-        result = Surface()
-        # 从文件路径中读取vertices的.npy文件
-        result.vertices = np.load(vertices_file_path)
-        result.faces = np.load(faces_file_path)
+    def save_file(self, file_path):
+        with open(file_path, "wb") as f:
+            pickle.dump(self, f)
 
-        return result
+    @classmethod
+    def from_file(cls, file_path):
+        with open(file_path, "rb") as f:
+            cls = pickle.load(f)
+        return cls
