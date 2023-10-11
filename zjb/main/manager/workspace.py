@@ -1,6 +1,5 @@
 import ulid
 from traits.api import List
-
 from zjb._traits.types import Instance
 from zjb.doj.job_manager import JobManager
 from zjb.doj.worker import Worker
@@ -11,7 +10,7 @@ from .project import Project
 
 
 class Workspace(Project):
-    _manager = Instance(JobManager)
+    manager = Instance(JobManager, transient=True)
 
     name = "Workspace"
 
@@ -30,11 +29,9 @@ class Workspace(Project):
             workspace = cls()
             workspace._gid = ulid.MIN_ULID
             manager.bind(workspace)
+            workspace.manager = manager
             return workspace
         if isinstance(data, cls):
+            data.manager = manager
             return data
         raise ValueError("The workspace must be created from an empty JobManager")
-
-    @property
-    def manager(self):
-        return self._manager
