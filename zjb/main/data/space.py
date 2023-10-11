@@ -47,3 +47,28 @@ class Surface(Data):
         with open(file_path, "rb") as f:
             cls = pickle.load(f)
         return cls
+
+    @classmethod
+    def from_npy(cls, vertices_file_path, faces_file_path):
+        result = cls()
+        result.vertices = np.load(vertices_file_path)
+        result.faces = np.load(faces_file_path)
+        return result
+
+    def surface_plot(self, show=False):
+        import pyqtgraph as pg
+
+        from zjb.main.visualization.surface_space import SurfaceViewWidget
+
+        pg.mkQApp()
+        surface = SurfaceViewWidget(self)
+        if show:
+            surface.setCameraParams(elevation=90, azimuth=-90, distance=50)
+            surface.show()
+            surface.setWindowTitle("SurfacePlot")
+            pg.exec()
+        return surface
+
+
+class Volume(Data):
+    space = Instance(VolumeSpace)

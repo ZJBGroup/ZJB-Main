@@ -27,6 +27,24 @@ class Atlas(Data):
             cls = pickle.load(f)
         return cls
 
+    def atlas_surface_plot(self, surface, surface_region_mapping, show=False):
+        import pyqtgraph as pg
+
+        from zjb.main.visualization.surface_space import AtlasSurfaceViewWidget
+
+        pg.mkQApp()
+        atlas_surface = AtlasSurfaceViewWidget(self, surface, surface_region_mapping)
+
+        if show:
+            atlas_surface.setCameraParams(elevation=90, azimuth=-90, distance=50)
+            atlas_surface.show()
+            atlas_surface.setWindowTitle("AtlasSurfacePlot")
+            pg.exec()
+        return atlas_surface
+
+    def atlas_volume_plot(self):
+        pass
+
 
 class RegionSpace(Space):
     atlas = Instance(Atlas, required=True)
