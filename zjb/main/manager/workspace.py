@@ -1,5 +1,6 @@
 import ulid
 from traits.api import List
+
 from zjb._traits.types import Instance
 from zjb.doj.job_manager import JobManager
 from zjb.doj.worker import Worker
