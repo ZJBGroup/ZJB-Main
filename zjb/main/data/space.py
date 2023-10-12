@@ -1,10 +1,14 @@
 import pickle
+from typing import TYPE_CHECKING
 
 import numpy as np
-from traits.api import Array, Float, Int, List, Str
+from traits.api import Array, Int, List, Str
 
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
+
+if TYPE_CHECKING:
+    from nibabel.gifti.gifti import GiftiImage
 
 
 class Space(Data):
@@ -20,7 +24,16 @@ class Space(Data):
 
 
 class SurfaceSpace(Space):
-    pass
+    @classmethod
+    def from_gii(cls, name: str, left: "GiftiImage | str", right: "GiftiImage | str"):
+        from nibabel.gifti.gifti import GiftiImage
+
+        if not isinstance(left, GiftiImage):
+            left = GiftiImage.from_filename(left)
+        if not isinstance(right, GiftiImage):
+            right = GiftiImage.from_filename(right)
+        shape = left.darrays[0].data.shape[0] + right.darrays[0].data.shape[0]
+        return cls(name=name, shape=[shape])
 
 
 class VolumeSpace(Space):
@@ -47,6 +60,29 @@ class Surface(Data):
         with open(file_path, "rb") as f:
             cls = pickle.load(f)
         return cls
+
+    @classmethod
+    def from_surface_gii(
+        cls,
+        space: "SurfaceSpace | str",
+        left_surf: "GiftiImage | str",
+        right_surf: "GiftiImage | str",
+    ):
+        from nibabel.gifti.gifti import GiftiImage
+
+        if not isinstance(left_surf, GiftiImage):
+            left_surf = GiftiImage.from_filename(left_surf)
+        if not isinstance(right_surf, GiftiImage):
+            right_surf = GiftiImage.from_filename(right_surf)
+
+        if not isinstance(space, SurfaceSpace):
+            space = SurfaceSpace.from_gii(space, left_surf, right_surf)
+        vertices = np.concatenate(
+            [left_surf.darrays[0].data, right_surf.darrays[0].data]
+        )
+        faces = np.concatenate([left_surf.darrays[1].data, right_surf.darrays[1].data])
+
+        return cls(space=space, vertices=vertices, faces=faces)
 
     @classmethod
     def from_npy(cls, vertices_file_path, faces_file_path):
