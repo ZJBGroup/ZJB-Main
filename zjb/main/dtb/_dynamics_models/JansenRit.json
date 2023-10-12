@@ -22,7 +22,7 @@
     },
     "coupling_variables": {
         "C": {
-            "expression": " np.zeros((n_regions,))\nfor i_coup in range(n_regions):\n    for j_coup in range(n_regions):\n        [i_coup] += __C[i_coup, j_coup] * (2.0 * nu_max / (1.0 + np.exp(r * (v0 - (y_1[j_coup] - y_2[j_coup])))))"
+            "expression": "__C @ (2.0 * nu_max / (1.0 + np.exp(r * (v0 - (y_1 - y_2)))))"
         }
     },
     "transient_variables": {
