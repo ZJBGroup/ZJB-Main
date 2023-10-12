@@ -80,7 +80,7 @@ class Surface(Data):
         vertices = np.concatenate(
             [left_surf.darrays[0].data, right_surf.darrays[0].data]
         )
-        faces = np.concatenate([left_surf.darrays[1].data, right_surf.darrays[1].data])
+        faces = np.concatenate([left_surf.darrays[1].data, right_surf.darrays[1].data + left_surf.darrays[0].data.shape[0]])
 
         return cls(space=space, vertices=vertices, faces=faces)
 
