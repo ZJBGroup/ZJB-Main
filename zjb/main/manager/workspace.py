@@ -36,3 +36,35 @@ class Workspace(Project):
             data.manager = manager
             return data
         raise ValueError("The workspace must be created from an empty JobManager")
+
+    def start_workers(self, count: int = 1):
+        """启动一些Worker
+
+        Parameters
+        ----------
+        count : int, optional
+            要启动的Worker数量, by default 1
+        """
+        new_workers = [Worker(manager=self.manager) for _ in range(count)]
+        for worker in new_workers:
+            worker.start()
+        self.workers += new_workers
+
+    def remove_idel_workers(self, count: int = 0):
+        """移除一些空闲的Worker
+
+        Parameters
+        ----------
+        count : int, optional
+            要移除的空闲Worker数量, 小于等于0时会移除所有空闲Worker, by default 0
+        """
+        terminated_workers: list[Worker] = []
+        for worker in self.workers:
+            result = worker.terminate()
+            if result:
+                terminated_workers.append(worker)
+                count -= 1
+                if count == 0:
+                    break
+        for worker in terminated_workers:
+            self.workers.remove(worker)
