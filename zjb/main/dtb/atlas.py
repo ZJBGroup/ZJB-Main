@@ -69,7 +69,8 @@ class Atlas(Data):
         from zjb.main.visualization.surface_space import AtlasSurfaceViewWidget
 
         pg.mkQApp()
-        atlas_surface = AtlasSurfaceViewWidget(self, surface, surface_region_mapping)
+        atlas_surface = AtlasSurfaceViewWidget()
+        atlas_surface.setAtlas(self, surface, surface_region_mapping)
 
         if show:
             atlas_surface.setCameraParams(elevation=90, azimuth=-90, distance=50)

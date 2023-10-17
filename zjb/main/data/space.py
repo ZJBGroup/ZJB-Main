@@ -97,7 +97,8 @@ class Surface(Data):
         from zjb.main.visualization.surface_space import SurfaceViewWidget
 
         pg.mkQApp()
-        surface = SurfaceViewWidget(self)
+        surface = SurfaceViewWidget()
+        surface.setSurface(self)
         if show:
             surface.setCameraParams(elevation=90, azimuth=-90, distance=50)
             surface.show()
