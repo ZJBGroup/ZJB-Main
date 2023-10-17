@@ -4,7 +4,7 @@ import re
 from typing import TYPE_CHECKING
 
 import numpy as np
-from traits.api import Array, Str
+from traits.api import Array, Dict, Property, Str
 
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
@@ -22,6 +22,13 @@ class Atlas(Data):
     labels = RequiredStrVector
 
     areas = FloatVector
+
+    subregions = Dict()
+
+    number_of_regions = Property()  # 脑区数量
+
+    def _get_number_of_regions(self):
+        return self.labels.shape[0]
 
     def save_file(self, file_path):
         with open(file_path, "wb") as f:

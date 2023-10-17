@@ -21,7 +21,7 @@ class SurfaceViewWidget(gl.GLViewWidget):
         )  # tab20
         self.faces = None
         self.vertexes = None
-        self._mouse_move = False
+
         # self.setSurface(surface)
 
     def setSurface(self, surface):
@@ -82,23 +82,20 @@ class SurfaceViewWidget(gl.GLViewWidget):
         self.surface.update()
 
     def setShader(self, shader_program):
-        self.Brain.setShader(shader=shader_program)
-        self.Brain.vertexes = None
-        self.Brain.update()
-
-    def mouseMoveEvent(self, event):
-        super().mouseMoveEvent(event)
-        self._mouse_move = True
+        self.surface.setShader(shader=shader_program)
+        self.surface.vertexes = None
+        self.surface.update()
 
 
 class AtlasSurfaceViewWidget(SurfaceViewWidget):
     region_signal = pyqtSignal(int)
+
     def __init__(self):
         super().__init__()
-        self.mousePos = None
         self.labels = None
         self.ampl = None
         self._split = False
+        self._mouse_move = False
 
     def setAtlas(self, atlas, surface, surface_region_mapping):
         self.setSurface(surface)
@@ -121,7 +118,9 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
 
             idx = np.argsort(index_vertexes)  # 返回一个一维数组，表示进行排序后的索引
             sorted_d = np.take(index_vertexes, idx)  # 返回一个一维数组，表示根据索引获取的元素
-            result = np.where(sorted_d == faces[:, :, None])  # 返回一个三维数组，表示在排序后的d中查找c中的每个元素的位置
+            result = np.where(
+                sorted_d == faces[:, :, None]
+            )  # 返回一个三维数组，表示在排序后的d中查找c中的每个元素的位置
             result = result[2]  # 取第三维度上的值，即在原始d中的位置
             faces = np.reshape(result, faces.shape)  # 将结果调整为和c相同的形状
 
@@ -148,7 +147,7 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         if self._mouse_move == True:
             self._mouse_move = False
             return
-        lpos = event.position() if hasattr(event, 'position') else event.localPos()
+        lpos = event.position() if hasattr(event, "position") else event.localPos()
         self.mousePos = lpos
         region = [lpos.x(), lpos.y(), 1, 1]
         # itemsAt seems to take in device pixels
@@ -164,5 +163,6 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
 
         self._mouse_move = False
 
-
-
+    def mouseMoveEvent(self, event):
+        super().mouseMoveEvent(event)
+        self._mouse_move = True
