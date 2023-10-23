@@ -1,6 +1,5 @@
 import csv
 import pickle
-import re
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -27,8 +26,13 @@ class Atlas(Data):
 
     number_of_regions = Property()  # 脑区数量
 
+    space: "RegionSpace" = Instance("RegionSpace", module=__name__)  # type: ignore
+
     def _get_number_of_regions(self):
         return self.labels.shape[0]
+
+    def _space_default(self):
+        return RegionSpace(atlas=self)
 
     def save_file(self, file_path):
         with open(file_path, "wb") as f:
@@ -92,3 +96,7 @@ class Atlas(Data):
 
 class RegionSpace(Space):
     atlas = Instance(Atlas, required=True)
+
+    @classmethod
+    def from_atlas(cls, atlas: Atlas):
+        return atlas.space
