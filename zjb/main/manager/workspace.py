@@ -50,7 +50,7 @@ class Workspace(Project):
             worker.start()
         self.workers += new_workers
 
-    def remove_idel_workers(self, count: int = 0):
+    def remove_idle_workers(self, count: int = 0):
         """移除一些空闲的Worker
 
         Parameters
