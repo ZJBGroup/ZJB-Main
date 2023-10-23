@@ -1,5 +1,4 @@
 from traits.api import Dict, Float, Str, Union
-
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
 
@@ -49,5 +48,5 @@ class DTB(Data):
         result = simulator()
         if store_key:
             with self:
-                self.data[store_key] = result
+                self.data |= {store_key: result}
         return result
