@@ -1,10 +1,11 @@
 from traits.api import Dict, Float, Str, Union
-from zjb._traits.types import Instance
+
+from zjb._traits.types import Instance, TraitAny
 from zjb.dos.data import Data
 
 from ..data.correlation import SpaceCorrelation
 from ..simulation.simulator import Simulator
-from ..trait_types import FloatVector, TraitAny
+from ..trait_types import FloatVector
 from .dtb_model import DTBModel
 from .subject import Subject
 

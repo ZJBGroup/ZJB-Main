@@ -24,7 +24,9 @@ class Workspace(Project):
     workers = List(Instance(Worker), transient=True)
 
     @classmethod
-    def from_manager(cls, manager: JobManager):
+    def from_manager(cls, manager: JobManager, gid: "ulid.ULID | None" = None):
+        if gid:
+            return super().from_manager(manager, gid)
         data = next(manager.iter(), None)
         if not data:  # manager为空
             workspace = cls()

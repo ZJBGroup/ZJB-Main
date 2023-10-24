@@ -2,10 +2,9 @@ import csv
 import pickle
 from typing import TYPE_CHECKING
 
-import numpy as np
-from traits.api import Array, Dict, Property, Str
+from traits.api import Dict, Property, Str
 
-from zjb._traits.types import Instance
+from zjb._traits.types import Instance, TraitAny, TypedInstance
 from zjb.dos.data import Data
 
 from ..data.space import Space
@@ -22,11 +21,13 @@ class Atlas(Data):
 
     areas = FloatVector
 
-    subregions = Dict()
+    subregions = Dict(Str, TraitAny)
 
     number_of_regions = Property()  # 脑区数量
 
-    space: "RegionSpace" = Instance("RegionSpace", module=__name__)  # type: ignore
+    space = TypedInstance["RegionSpace"](
+        "RegionSpace", allow_none=False, module=__name__
+    )
 
     def _get_number_of_regions(self):
         return self.labels.shape[0]

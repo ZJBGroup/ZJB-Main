@@ -1,21 +1,21 @@
 from traits.api import List, Str
 
-from zjb._traits.types import Instance
+from zjb._traits.types import Instance, TypedInstance
 from zjb.dos.data import Data
 
 from ..dtb.dtb import DTB
 from ..dtb.dtb_model import DTBModel
 from ..dtb.subject import Subject
 
-ProjectInstance: "Project" = Instance("Project", module=__name__)  # type: ignore
+ProjectInstance = TypedInstance["Project"]("Project", allow_none=False, module=__name__)  # type: ignore
 
 
 class Project(Data):
     name = Str()
 
-    parent: "Project" = ProjectInstance  # type: ignore
+    parent = ProjectInstance
 
-    children: list["Project"] = List(ProjectInstance)  # type: ignore
+    children = List(ProjectInstance)
 
     subjects = List(Instance(Subject))
 

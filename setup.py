@@ -2,9 +2,9 @@ import setuptools
 
 setuptools.setup(
     name="zjb-main",
-    version="0.2.0",
+    version="0.2.5",
     install_requires=[
-        "zjb-framework>=0.2.0",
+        "zjb-framework>=0.2.5",
         "numba",
         "mako",
         "brainpy",
