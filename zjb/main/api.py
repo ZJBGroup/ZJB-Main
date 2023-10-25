@@ -1,6 +1,6 @@
 from .data.correlation import SpaceCorrelation
 from .data.regionmapping import SurfaceRegionMapping, VolumeRegionMapping
-from .data.series import SpaceSeries, TimeSeries
+from .data.series import SpaceSeries, TimeSeries, RegionalTimeSeries
 from .data.space import Space, Surface, Volume
 from .dtb.atlas import Atlas
 from .dtb.dtb import DTB

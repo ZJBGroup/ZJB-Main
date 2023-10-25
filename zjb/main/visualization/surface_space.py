@@ -55,9 +55,9 @@ class SurfaceViewWidget(gl.GLViewWidget):
                                     void main() {
                                         vec4 color = gl_Color;
                                         float s = pow(normal.x*normal.x + normal.y*normal.y, 2.0);
-                                        color.x = color.x * (1 - s);
-                                        color.y = color.y * (1 - s);
-                                        color.z = color.z * (1 - s);
+                                        color.x = color.x * (1. - s);
+                                        color.y = color.y * (1. - s);
+                                        color.z = color.z * (1. - s);
                                         gl_FragColor = color;
                                     }
                                 """
