@@ -2,7 +2,7 @@ from .data.correlation import SpaceCorrelation
 from .data.regionmapping import SurfaceRegionMapping, VolumeRegionMapping
 from .data.series import SpaceSeries, TimeSeries, RegionalTimeSeries
 from .data.space import Space, Surface, Volume
-from .dtb.atlas import Atlas
+from .dtb.atlas import Atlas, RegionSpace
 from .dtb.dtb import DTB
 from .dtb.dtb_model import DTBModel
 from .dtb.dynamics_model import DynamicsModel
