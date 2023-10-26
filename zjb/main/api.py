@@ -1,4 +1,4 @@
-from .data.correlation import SpaceCorrelation
+from .data.correlation import SpaceCorrelation, Connectivity
 from .data.regionmapping import SurfaceRegionMapping, VolumeRegionMapping
 from .data.series import SpaceSeries, TimeSeries, RegionalTimeSeries
 from .data.space import Space, Surface, Volume

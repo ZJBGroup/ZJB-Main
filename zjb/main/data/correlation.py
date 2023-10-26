@@ -19,8 +19,6 @@ class SpaceCorrelation(Data):
 class Connectivity(SpaceCorrelation):
     space = Instance(RegionSpace, required=True)
 
-    region_labels = Array()
-
     undirected = Bool()
 
     average_weights = Property()
