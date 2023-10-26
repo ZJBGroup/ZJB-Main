@@ -331,7 +331,7 @@ class BifurcationFunc(HasPrivateTraits):
 
     resolutions = Dict()
 
-    def __call__(self, show):
+    def __call__(self, show=False):
         plt.cla()
         bp.math.enable_x64()
         model = self.bifurcation_analyzer(self.model)

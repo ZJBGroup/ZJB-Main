@@ -54,4 +54,3 @@ class RegionalTimeSeries(TimeSeries):
 
     space = Instance(RegionSpace)
 
-    atlas = Instance(Atlas)
