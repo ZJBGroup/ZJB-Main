@@ -28,3 +28,9 @@ class EulerSolver(Solver):
 class HenuSolver(Solver):
     def render(self, model: DynamicsModel, env: dict[str, Any]) -> str:
         return TEMPLATE.get_def("henu").render(solver=self, model=model, env=env)  # type: ignore
+
+
+SOLVER_DICT = {
+    "Euler": EulerSolver,
+    "Henu": HenuSolver,
+}
