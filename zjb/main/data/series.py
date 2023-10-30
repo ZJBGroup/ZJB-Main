@@ -1,4 +1,5 @@
 import pickle
+from enum import Enum as ZJBEnum
 
 import numpy as np
 from traits.api import Array, Enum, Float, Int, Property, Str
@@ -9,7 +10,7 @@ from zjb.main.data.space import Space
 from zjb.main.dtb.atlas import Atlas, RegionSpace
 
 
-class TimeUnit(Enum):
+class TimeUnit(ZJBEnum):
     """时间单位"""
 
     UNKNOWN = "unknown"
@@ -26,7 +27,7 @@ class SpaceSeries(Data):
 class TimeSeries(SpaceSeries):
     time_dim = Int(0)  # 时间的维度
 
-    sample_unit = Enum(TimeUnit.MILLISECOND)  # 采样单位
+    sample_unit = Enum(TimeUnit)  # 采样单位
 
     sample_period = Float(1)  # 采样间隔
 
@@ -45,7 +46,9 @@ class TimeSeries(SpaceSeries):
         return cls
 
     def _get_time(self):
-        time = self.start_time + (np.arange(self.data.shape[self.time_dim]) * self.sample_period)
+        time = self.start_time + (
+            np.arange(self.data.shape[self.time_dim]) * self.sample_period
+        )
         return time
 
 
@@ -53,4 +56,3 @@ class RegionalTimeSeries(TimeSeries):
     """脑区时间序列"""
 
     space = Instance(RegionSpace)
-
