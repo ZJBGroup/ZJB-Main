@@ -23,3 +23,8 @@ class Solver(HasPrivateTraits, metaclass=ABCMetaHasTraits):
 class EulerSolver(Solver):
     def render(self, model: DynamicsModel, env: dict[str, Any]) -> str:
         return TEMPLATE.get_def("euler").render(solver=self, model=model, env=env)  # type: ignore
+
+
+class HenuSolver(Solver):
+    def render(self, model: DynamicsModel, env: dict[str, Any]) -> str:
+        return TEMPLATE.get_def("henu").render(solver=self, model=model, env=env)  # type: ignore
