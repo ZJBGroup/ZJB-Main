@@ -28,6 +28,14 @@ class DTB(Data):
 
     data = Dict(Str, TraitAny)
 
+    def unbind(self):
+        if not self._manager:
+            return
+        for data in self.data.values():
+            if isinstance(data, Data):
+                data.unbind()
+        self._manager.unbind(self)
+
     def simulate(
         self,
         t: "float | None" = None,
@@ -114,3 +122,10 @@ class PSEResult(Data):
     data = List(Instance(SimulationResult))
 
     parameters = Dict(Str, List(Union(Float, FloatVector)))
+
+    def unbind(self):
+        if not self._manager:
+            return
+        for data in self.data:
+            data.unbind()
+        self._manager.unbind(self)

@@ -39,6 +39,11 @@ class Workspace(Project):
             return data
         raise ValueError("The workspace must be created from an empty JobManager")
 
+    def unbind(self):
+        raise RuntimeError(
+            "The workspace cannot unbind from the manager, delete the data files directly."
+        )
+
     def start_workers(self, count: int = 1):
         """启动一些Worker
 

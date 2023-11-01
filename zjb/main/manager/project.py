@@ -29,6 +29,19 @@ class Project(Data):
 
     dtbs = List(Instance(DTB))
 
+    def unbind(self):
+        if not self._manager:
+            return
+        for child in self.children:
+            child.unbind()
+        for subject in self.subjects:
+            subject.unbind()
+        for model in self.models:
+            model.unbind()
+        for dtb in self.dtbs:
+            dtb.unbind()
+        self._manager.unbind(self)
+
     def available_subjects(self) -> list[Subject]:
         """列出项目中所有可用的被试(包括父项目中的可用被试)
 
@@ -162,3 +175,83 @@ class Project(Data):
         )
         self.dtbs += [dtb]
         return dtb
+
+    def remove_project(self, project: "Project"):
+        """移除一个子项目
+
+        Parameters
+        ----------
+        project : Project
+            要移除的项目
+
+        Raises
+        ------
+        ValueError
+            要移除的项目不属于本项目
+        """
+        children = self.children
+        if project not in children:
+            raise ValueError(f"The project does not belong to this project.")
+        children.remove(project)
+        self.children = children
+        project.unbind()
+
+    def remove_subject(self, subject: Subject):
+        """移除一个被试
+
+        Parameters
+        ----------
+        subject : Subject
+            要移除的被试
+
+        Raises
+        ------
+        ValueError
+            要移除的被试不属于本项目
+        """
+        subjects = self.subjects
+        if subject not in subjects:
+            raise ValueError(f"The subject does not belong to this project.")
+        subjects.remove(subject)
+        self.subjects = subjects
+        subject.unbind()
+
+    def remove_model(self, model: DTBModel):
+        """移除一个DTB模型
+
+        Parameters
+        ----------
+        model : DTBModel
+            要移除的DTB模型
+
+        Raises
+        ------
+        ValueError
+            要移除的DTB模型不属于本项目
+        """
+        models = self.models
+        if model not in models:
+            raise ValueError(f"The model does not belong to this project.")
+        models.remove(model)
+        self.models = models
+        model.unbind()
+
+    def remove_dtb(self, dtb: DTB):
+        """移除一个DTB
+
+        Parameters
+        ----------
+        dtb : DTB
+            要移除的DTB
+
+        Raises
+        ------
+        ValueError
+            要移除的DTB不属于本项目
+        """
+        dtbs = self.models
+        if dtb not in dtbs:
+            raise ValueError(f"The dtb does not belong to this project.")
+        dtbs.remove(dtb)
+        self.dtbs = dtbs
+        dtb.unbind()
