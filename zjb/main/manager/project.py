@@ -249,7 +249,7 @@ class Project(Data):
         ValueError
             要移除的DTB不属于本项目
         """
-        dtbs = self.models
+        dtbs = self.dtbs
         if dtb not in dtbs:
             raise ValueError(f"The dtb does not belong to this project.")
         dtbs.remove(dtb)
