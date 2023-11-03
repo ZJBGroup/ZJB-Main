@@ -73,6 +73,7 @@ class DTB(Data):
         if store_key:
             with self:
                 self.data |= {store_key: result}
+            return None
         return result
 
     def _pse_result(
@@ -88,6 +89,7 @@ class DTB(Data):
         if store_key:
             with self:
                 self.data |= {store_key: result}
+            return None
         return result
 
     @generator_job_wrap
@@ -104,12 +106,11 @@ class DTB(Data):
                 DTB.simulate,
                 self,
                 t=t,
-                store_key=store_key,
                 dynamic_parameters=para_dict,
             )
             jobs.append(job)
             yield job
-        return Job(DTB._pse_result, self, parameters, jobs)
+        return Job(DTB._pse_result, self, parameters, jobs, store_key=store_key)
 
 
 class SimulationResult(Data):
