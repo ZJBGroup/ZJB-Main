@@ -1,5 +1,3 @@
-from enum import Enum
-
 import numpy as np
 from scipy.signal import butter, correlate, detrend, filtfilt, hilbert, resample
 from sklearn.manifold import SpectralEmbedding
@@ -7,18 +5,6 @@ from traits.api import Array, Bool, Dict, Enum, Float, HasTraits, Instance, Int,
 
 from zjb.main.analysis.base import AnalyzerBase
 from zjb.main.data.series import TimeSeries
-
-
-def pearson_correlation(timeseries: TimeSeries):
-    """计算节点之间的皮尔森相关系数"""
-    corr_result = np.corrcoef(timeseries.data, rowvar=False)
-    return corr_result
-
-
-def temporal_covariance(timeseries: TimeSeries):
-    """节点间的协方差"""
-    covar_result = np.cov(timeseries.data, rowvar=False)
-    return covar_result
 
 
 def kld(x: np.ndarray, y: np.ndarray):
@@ -178,8 +164,9 @@ class FCDMatrix(FCDAnalysis):
         data = self._apply_bandpass_filter(self.ts_emp.data, fs)
         dFC = self._compute_dFC_series(data, tr, fs)
         fcd_matrix = self._compute_FCD_matrix(dFC)
-        eigvals, eigvects = self._extract_stable_eigs(fcd_matrix, fs)
-        return fcd_matrix, eigvals, eigvects
+        # eigvals, eigvects = self._extract_stable_eigs(fcd_matrix, fs)
+        # return fcd_matrix, eigvals, eigvects
+        return fcd_matrix
 
     def _compute_FCD_matrix(self, dFC: np.ndarray):
         comparative_methods = {
@@ -250,3 +237,58 @@ class FCDMatrix(FCDAnalysis):
                 periods[i, 1] = jp[i * 2 + 1] * sp_size + sw_size
         periods_t = np.round(periods * 1 / fs, 3)
         return periods, periods_t
+
+
+def fcd_analysis(
+    timeseries: TimeSeries,
+    method: str = "CC",
+    sw: float = 1.0,
+    spanning: float = 0.5,
+    f_low: float = 0.01,
+    f_high: float = 0.25,
+):
+    fcd = FCDAnalysis(
+        ts_emp=timeseries, method=method, sw=sw, sp=spanning, f_lo=f_low, f_hi=f_high
+    )
+    dFC = fcd()
+    return dFC
+
+
+def fcd_matrix(
+    timeseries: TimeSeries,
+    method: str = "CC",
+    sw: float = 1.0,
+    spanning: float = 0.5,
+    f_low: float = 0.01,
+    f_high: float = 0.25,
+    comparison: str = "PCC-UT",
+    n_eig: int = 3,
+):
+    fcd = FCDMatrix(
+        ts_emp=timeseries,
+        method=method,
+        sw=sw,
+        sp=spanning,
+        f_lo=f_low,
+        f_hi=f_high,
+        comparison=comparison,
+        n_eig=n_eig,
+    )
+    fcd_m = fcd()
+    return fcd_m
+
+
+def pearson_correlation(timeseries: TimeSeries):
+    """计算节点之间的皮尔森相关系数"""
+    corr_result = np.corrcoef(timeseries.data, rowvar=False)
+    return corr_result
+
+
+def temporal_covariance(timeseries: TimeSeries):
+    """节点间的协方差"""
+    covar_result = np.cov(timeseries.data, rowvar=False)
+    return covar_result
+
+def timeseries_data_cropping(timeseries: TimeSeries, discard: int = 100):
+    result = timeseries.data[discard:, :]
+    return result
