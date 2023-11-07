@@ -1,5 +1,5 @@
 from .evaluation import *
-from .dim_reduction import *
+# from .dim_reduction import *
 
 __all__ = [
     "pearson_correlation",
