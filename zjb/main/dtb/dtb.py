@@ -1,6 +1,8 @@
 import itertools
+import os
 from typing import Any, Iterable
 
+import numpy as np
 from traits.api import Dict, Float, List, Str, Union
 
 from zjb._traits.types import Instance, TraitAny
@@ -117,6 +119,13 @@ class SimulationResult(Data):
     data = List(Instance(RegionalTimeSeries))
 
     parameters = Dict(Str, Union(Float, FloatVector))
+
+    def unbind(self):
+        if not self._manager:
+            return
+        for data in self.data:
+            data.unbind()
+        self._manager.unbind(self)
 
 
 class PSEResult(Data):
