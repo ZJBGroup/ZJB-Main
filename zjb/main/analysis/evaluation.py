@@ -278,7 +278,12 @@ def fcd_matrix(
     return fcd_m
 
 
-def pearson_correlation(timeseries: TimeSeries):
+def pearson_correlation(array_1: np.ndarray, array_2: np.ndarray):
+    result = np.corrcoef(array_1.flatten(), array_2.flatten())[0, 1]
+    return result
+
+
+def self_pearson_correlation(timeseries: TimeSeries):
     """计算节点之间的皮尔森相关系数"""
     corr_result = np.corrcoef(timeseries.data, rowvar=False)
     return corr_result
@@ -289,6 +294,12 @@ def temporal_covariance(timeseries: TimeSeries):
     covar_result = np.cov(timeseries.data, rowvar=False)
     return covar_result
 
+
 def timeseries_data_cropping(timeseries: TimeSeries, discard: int = 100):
     result = timeseries.data[discard:, :]
+    return result
+
+
+def array_t(array: np.ndarray, array_1: np.ndarray, a: int = 5):
+    result = array + a + array_1
     return result

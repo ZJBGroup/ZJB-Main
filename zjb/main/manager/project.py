@@ -7,7 +7,7 @@ from zjb.dos.data import Data
 
 from ..data.correlation import SpaceCorrelation
 from ..dtb.atlas import Atlas
-from ..dtb.dtb import DTB
+from ..dtb.dtb import DTB, AnalysisResult
 from ..dtb.dtb_model import DTBModel
 from ..dtb.dynamics_model import DynamicsModel
 from ..dtb.subject import Subject
@@ -28,6 +28,8 @@ class Project(Data):
     models = List(Instance(DTBModel))
 
     dtbs = List(Instance(DTB))
+
+    data = List()
 
     def unbind(self):
         if not self._manager:

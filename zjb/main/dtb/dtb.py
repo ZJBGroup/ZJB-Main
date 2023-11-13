@@ -3,7 +3,7 @@ import os
 from typing import Any, Iterable
 
 import numpy as np
-from traits.api import Dict, Float, List, Str, Union
+from traits.api import Array, Dict, Float, Int, List, Str, Union
 
 from zjb._traits.types import Instance, TraitAny
 from zjb.doj import Job, generator_job_wrap
@@ -132,6 +132,23 @@ class PSEResult(Data):
     data = List(Instance(SimulationResult))
 
     parameters = Dict(Str, List(Union(Float, FloatVector)))
+
+    def unbind(self):
+        if not self._manager:
+            return
+        for data in self.data:
+            data.unbind()
+        self._manager.unbind(self)
+
+
+class AnalysisResult(Data):
+    name = Str()
+
+    origin = List()  # 由一个或多个源数据（共同)进行分析
+
+    data = TraitAny()  # 分析结果的数据
+
+    parameters = Dict(Str, Union(Float, FloatVector, Str))  # 分析方法及所使用的参数
 
     def unbind(self):
         if not self._manager:
