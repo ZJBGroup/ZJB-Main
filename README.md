@@ -14,3 +14,10 @@ pip install https://github.com/ZJBGroup/ZJB-Main/tarball/main
 ```
 pip install --no-cache-dir https://github.com/ZJBGroup/ZJB-Main/tarball/main
 ```
+
+License
+---
+
+ZJB-Main is licensed under [GPL-3.0](LICENSE).
+
+Copyright © 2023 by [Zhejiang Lab](https://www.zhejianglab.com/). All Rights Reserved
