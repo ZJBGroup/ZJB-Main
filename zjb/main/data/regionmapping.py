@@ -43,6 +43,23 @@ class SurfaceRegionMapping(Data):
 
         return cls(space=space, atlas=atlas, data=data)
 
+    @classmethod
+    def from_txt(cls, space: "SurfaceSpace | str", atlas: "Atlas | str", path: str):
+        f = open(path)
+        lines = f.readlines()
+        rows = len(lines)
+        cols = len(lines[0].split())
+        mat = np.zeros((rows, cols), dtype=float)
+
+        # 遍历每一行的数据，并将其转换为浮点型，然后存储到矩阵中
+        for i in range(rows):
+            data = lines[i].strip().split()  # 去掉每行的换行符，并用空格分割数据
+            data = [float(x) for x in data]  # 将数据转换为浮点型
+            mat[i, :] = data  # 将数据赋值给矩阵的第i行
+        mat = mat.squeeze()
+
+        return cls(space=space, atlas=atlas, data=mat)
+
 
 class VolumeRegionMapping(Data):
     volume = Instance(VolumeSpace, required=True)

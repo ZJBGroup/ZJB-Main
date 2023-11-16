@@ -91,6 +91,34 @@ class Surface(Data):
         result.faces = np.load(faces_file_path)
         return result
 
+    @classmethod
+    def from_txt(cls, space: "SurfaceSpace | str", vertices_file_path: str, faces_file_path: str):
+        f = open(vertices_file_path)
+        lines = f.readlines()
+        rows = len(lines)
+        cols = len(lines[0].split())
+        vertices = np.zeros((rows, cols), dtype=float)
+
+        # 遍历每一行的数据，并将其转换为浮点型，然后存储到矩阵中
+        for i in range(rows):
+            data = lines[i].strip().split()  # 去掉每行的换行符，并用空格分割数据
+            data = [float(x) for x in data]  # 将数据转换为浮点型
+            vertices[i, :] = data  # 将数据赋值给矩阵的第i行
+
+        f = open(faces_file_path)
+        lines = f.readlines()
+        rows = len(lines)
+        cols = len(lines[0].split())
+        faces = np.zeros((rows, cols), dtype=float)
+
+        # 遍历每一行的数据，并将其转换为浮点型，然后存储到矩阵中
+        for i in range(rows):
+            data = lines[i].strip().split()  # 去掉每行的换行符，并用空格分割数据
+            data = [float(x) for x in data]  # 将数据转换为浮点型
+            faces[i, :] = data  # 将数据赋值给矩阵的第i行
+
+        return cls(space=space, vertices=vertices, faces=faces)
+
     def surface_plot(self, show=False):
         import pyqtgraph as pg
 
