@@ -1,5 +1,5 @@
 from .evaluation import *
-# from .dim_reduction import *
+from .custom import *
 
 __all__ = [
     "pearson_correlation",
@@ -9,5 +9,5 @@ __all__ = [
     "fcd_analysis",
     "fcd_matrix",
     "timeseries_data_cropping",
-    "array_t",
+    "array_sum",
 ]

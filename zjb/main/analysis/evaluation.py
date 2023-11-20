@@ -298,8 +298,3 @@ def temporal_covariance(timeseries: TimeSeries):
 def timeseries_data_cropping(timeseries: TimeSeries, discard: int = 100):
     result = timeseries.data[discard:, :]
     return result
-
-
-def array_t(array: np.ndarray, array_1: np.ndarray, a: int = 5):
-    result = array + a + array_1
-    return result
