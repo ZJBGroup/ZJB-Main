@@ -76,6 +76,14 @@ class DynamicsModel(Data):
             raise ValueError(f"{name} not found.")
         return cls.from_file(str(file))
 
+    @classmethod
+    def list_names(cls):
+        return [
+            file.stem
+            for file in (Path(__file__).parent / "_dynamics_models").iterdir()
+            if file.is_file() and file.suffix == ".json"
+        ]
+
     def phase_plane_analyse(
         self,
         target_vars: dict,
