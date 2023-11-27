@@ -14,5 +14,8 @@
     "parameters": {
         "gamma": -10.0
     },
+    "docs":{
+        "gamma":"The damping coefficient specifies how quickly the node's activity relaxes, must be larger  than the node's in-degree in order to remain stable."
+    },
     "references": []
 }

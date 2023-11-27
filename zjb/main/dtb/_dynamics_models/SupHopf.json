@@ -21,6 +21,10 @@
         "a": -0.5,
         "omega": 1.0
     },
+    "docs":{
+        "a":  "Local bifurcation parameter.",
+        "omega" :"Angular frequency."
+    },
     "references": [
         "[Kuznetsov_2013] Kuznetsov, Y.A. *Elements of applied bifurcation theory.* Springer Sci & Business Media, 2013, vol. 112.",
         "[Deco_2017a] Deco, G., Kringelbach, M.L., Jirsa, V.K., Ritter, P. *The dynamics of resting fluctuations in the brain: metastability and its dynamical cortical core* Sci Reports, 2017, 7: 3095."

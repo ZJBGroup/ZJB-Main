@@ -14,6 +14,9 @@
     "parameters": {
         "taux": 1.0
     },
+    "docs":{
+        "taux" :"The fast time-scale for potential calculus :math:`x`, state-variable of the model."
+    },
     "references": [
         "[Hopfield1982] Hopfield, J. J., *Neural networks and physical systems with emergent collective computational abilities*, Proc. Nat. Acad. Sci. (USA) 79, 2554-2558, 1982.",
         "Hopfield1984] Hopfield, J. J., *Neurons with graded response have collective computational properties like those of two-sate neurons*, Proc. Nat. Acad. Sci. (USA) 81, 3088-3092, 1984."

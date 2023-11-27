@@ -27,6 +27,13 @@
         "k": 1.0,
         "eta": 20.0
     },
+    "docs":{
+        "Delta" :"Half-width of heterogeneous noise distribution",
+        "alpha" :"Parameter of the alpha-function",
+        "v_syn" :"QIF membrane reversal potential",
+        "k" :"Local coupling strength",
+        "eta" :"Constant parameter to scale the rate of feedback from the firing rate variable to itself"
+    },
     "references": [
         "[Coombes_Byrne_2019] Coombes, S., & Byrne, \u00c1. (2019). Next generation neural mass models. In *Nonlinear Dynamics in Computational Neuroscience* (pp. 1-16). Springer, Cham."
     ]

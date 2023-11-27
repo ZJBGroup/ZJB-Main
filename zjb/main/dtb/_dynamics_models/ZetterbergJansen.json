@@ -86,6 +86,26 @@
         "U": 0.12,
         "Q": 0.12
     },
+    "docs":{
+        "He":  "Maximum amplitude of EPSP [mV]. Also called average synaptic gain.",
+        "Hi" : "Maximum amplitude of IPSP [mV]. Also called average synaptic gain.",
+        "ke" : "Reciprocal of the time constant of passive membrane and all other spatially distributed delays in the dendritic network [ms^-1]. Also called average synaptic time constant.",
+        "ki" : "Reciprocal of the time constant of passive membrane and all other spatially distributed delays in the dendritic network [ms^-1]. Also called average synaptic time constant.",
+        "e0" : "Half of the maximum population mean firing rate [ms^-1].",
+        "rho_2" : "Firing threshold (PSP) for which a 50% firing rate is achieved. In other words, it is the value of the average membrane potential corresponding to the inflection point of the sigmoid [mV]. Population mean firing threshold.",
+        "rho_1" : "Steepness of the sigmoidal transformation [mV^-1].",
+        "gamma_1" : "Average number of synapses between populations (pyramidal to stellate).",
+        "gamma_2" : "Average number of synapses between populations (stellate to pyramidal).",
+        "gamma_3" : "Connectivity constant (pyramidal to interneurons)",
+        "gamma_4" : "Connectivity constant (interneurons to pyramidal)",
+        "gamma_5": "Connectivity constant (interneurons to interneurons)",
+        "gamma_1T" : "Coupling factor from the extrinisic input to the spiny stellate population.",
+        "gamma_2T" : "Coupling factor from the extrinisic input to the pyramidal population.",
+        "gamma_3T" : "Coupling factor from the extrinisic input to the inhibitory population.",
+        "P" : "Maximum firing rate to the pyramidal population [ms^-1]. (External stimulus. Constant intensity.Entry point for coupling.)",
+        "U" : "Maximum firing rate to the stellate population [ms^-1]. (External stimulus. Constant intensity.Entry point for coupling.)",
+        "Q" : "Maximum firing rate to the interneurons population [ms^-1]. (External stimulus. Constant intensity.Entry point for coupling.)"
+    },
     "references": [
         "[ZL_1978] Zetterberg LH, Kristiansson L and Mossberg K. Performance of a Model for a Local Neuron Population. Biological Cybernetics 31, 15-26, 1978.",
         "[JB_1995]  Jansen, B., H. and Rit V., G., *Electroencephalogram and visual evoked potential generation in a mathematical model of coupled cortical columns*, Biological Cybernetics (73) 357:366, 1995.",

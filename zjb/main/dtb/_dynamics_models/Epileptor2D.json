@@ -41,6 +41,20 @@
         "tt": 1.0,
         "modification": 0.0
     },
+    "docs":{
+        "a" :"Coefficient of the cubic term in the first state-variable.",
+        "b" :"Coefficient of the squared term in the first state-variable.",
+        "c" :"Additive coefficient for the second state-variable x_{2},  called :math:`y_{0}` in Jirsa paper.",
+        "d" :"Coefficient of the squared term in the second state-variable x_{2}.",
+        "r" :"Temporal scaling in the slow state-variable,  called :math:`1\tau_{0}` in Jirsa paper (see class Epileptor).",
+        "x0" :"Epileptogenicity parameter.",
+        "Iext" :"External input current to the first state-variable.",
+        "slope" :"Linear coefficient in the first state-variable.",
+        "Kvf" :"Coupling scaling on a very fast time scale.",
+        "Ks" :"Permittivity coupling, that is from the fast time scale toward the slow time scale.",
+        "tt" :"Time scaling of the whole system to the system in real time.",
+        "modification" :"When modification is True, then use nonlinear influence on z.  The default value is False, i.e., linear influence."
+    },
     "references": [
         "[Proixetal_2014] Proix, T.; Bartolomei, F; Chauvel, P; Bernard, C; Jirsa, V.K. *Permittivity coupling across brain regions determines seizure recruitment in partial epilepsy.* J Neurosci 2014, 34:15009-21.",
         "[Proixetal_2017] Proix, T.; Bartolomei, F; Guye, M.; Jirsa, V.K. *Individual brain structure and modelling predict seizure propagation.* Brain 2017, 140; 641\u2013654."

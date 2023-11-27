@@ -17,7 +17,6 @@ from traits.api import (
     Str,
     Subclass,
 )
-
 from zjb._traits.types import Instance
 from zjb.dos.data import Data
 
@@ -48,6 +47,8 @@ class DynamicsModel(Data):
     transient_variables = Dict(Str, Instance(TransientVariable))
 
     parameters = Dict(Str, Float)
+
+    docs = Dict(Str, Str)
 
     references = List(Str)
 

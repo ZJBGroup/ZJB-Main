@@ -48,6 +48,22 @@
         "J_ii": 15.0,
         "Gamma": 5.0
     },
+    "docs":{
+        "I_e" :"External homogeneous current on excitatory population",
+        "Delta_e" :"Half-width of heterogeneous noise distribution over excitatory population",
+        "eta_e" :"Mean heterogeneous current on excitatory population",
+        "tau_e" :"Characteristic time of excitatory population",
+        "I_i" :"External current on inhibitory population",
+        "Delta_i" :"Half-width of heterogeneous noise distribution over inhibitory population",
+        "eta_i" :"Mean heterogeneous current on inhibitory population",
+        "tau_i" :"Characteristic time of inhibitory population",
+        "tau_s" :"Synaptic time constant",
+        "J_ee" :"Synaptic weight e-->e",
+        "J_ei" :"Synaptic weight i-->e",
+        "J_ie" :"Synaptic weight e-->i",
+        "J_ii" :"Synaptic weight i-->i",
+        "Gamma" :"Ratio of excitatory VS inhibitory global couplings G_ie/G_ee ."
+    },
     "references": [
         "[DumontGutkin2019] Dumont, G., & Gutkin, B. (2019). Macroscopic phase resetting-curves determine oscillatory coherence and signal transfer in inter-coupled neural circuits. PLoS computational biology, 15(5), e1007019."
     ]

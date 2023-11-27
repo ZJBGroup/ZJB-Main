@@ -34,6 +34,17 @@
         "cr": 1.0,
         "cv": 0.0
     },
+    "docs":{
+        "tau" :"Characteristic time",
+        "tau_A" :"Adaptation time scale",
+        "alpha" :"adaptation rate",
+        "I" :"External homogeneous current",
+        "Delta" :"Half-width of heterogeneous noise distribution",
+        "J" :"Synaptic weight",
+        "eta" :"Mean of heterogeneous noise distribution",
+        "cr" :"It is the weight on Coupling through variable r.",
+        "cv" :"It is the weight on Coupling through variable V."
+    },
     "references": [
         "[Gastetal_2020] Gast, R., Schmidt, H., & Kn\u00f6sche, T. R. (2020). A mean-field description of bursting dynamics in spiking neural networks with short-term adaptation. *Neural Computation*, 32(9), 1615-1634."
     ]

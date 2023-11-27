@@ -54,6 +54,27 @@
         "G": 2.0,
         "lamda": 0.0
     },
+    "docs":{
+        "a_e" :"[n/C]. Excitatory population input gain parameter, chosen to fit numerical solutions.",
+        "b_e":"[Hz]. Excitatory population input shift parameter chosen to fit numerical solutions.",
+        "d_e" :"[s]. Excitatory population input scaling parameter chosen to fit numerical solutions.",
+        "gamma_e" :"Excitatory population kinetic parameter",
+        "tau_e" :"[ms]. Excitatory population NMDA decay time constant.",
+        "w_p" :"Excitatory population recurrence weight",
+        "J_N" :"[nA] NMDA current",
+        "W_e" :"Excitatory population external input scaling weight",
+        "a_i" :"[n/C]. Inhibitory population input gain parameter, chosen to fit numerical solutions.",
+        "b_i" :"[Hz]. Inhibitory population input shift parameter chosen to fit numerical solutions.",
+        "d_i" :"[s]. Inhibitory population input scaling parameter chosen to fit numerical solutions.",
+        "gamma_i" :"Inhibitory population kinetic parameter",
+        "tau_i" :"[ms]. Inhibitory population NMDA decay time constant.",
+        "J_i" :"[nA] Local inhibitory current",
+        "W_i" :"Inhibitory population external input scaling weight",
+        "I_o" :"[nA]. Effective external input",
+        "I_ext" :"[nA]. Effective external stimulus input",
+        "G" :"Global coupling scaling",
+        "lamda" :"Inhibitory global coupling scaling"
+    },
     "references": [
         "[WW_2006] Kong-Fatt Wong and Xiao-Jing Wang,  *A Recurrent Network Mechanism of Time Integration in Perceptual Decisions*. Journal of Neuroscience 26(4), 1314-1328, 2006.",
         "[DPA_2014] Deco Gustavo, Ponce Alvarez Adrian, Patric Hagmann, Gian Luca Romani, Dante Mantini, and Maurizio Corbetta. *How Local Excitation\u2013Inhibition Ratio Impacts the Whole Brain Dynamics*. The Journal of Neuroscience 34(23), 7886 \u20137898, 2014."

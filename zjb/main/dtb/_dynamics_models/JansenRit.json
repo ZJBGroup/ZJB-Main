@@ -53,6 +53,23 @@
         "p_max": 0.32,
         "mu": 0.22
     },
+    "docs":{
+        "A": "Maximum amplitude of EPSP [mV]. Also called average synaptic gain.",
+        "B" :"Maximum amplitude of IPSP [mV]. Also called average synaptic gain.",
+        "a" :"Reciprocal of the time constant of passive membrane and all other spatially distributed delays in the dendritic network [ms^-1]. Also called average synaptic time constant.",
+        "b" :"Reciprocal of the time constant of passive membrane and all other spatially distributed delays in the dendritic network [ms^-1]. Also called average synaptic time constant.",
+        "v0" :"Firing threshold (PSP) for which a 50% firing rate is achieved. In other words, it is the value of the average membrane potential corresponding to the inflection point of the sigmoid [mV]. The usual value for this parameter is 6.0.",
+        "nu_max" :"Determines the maximum firing rate of the neural population [s^-1].",
+        "r" :"Steepness of the sigmoidal transformation [mV^-1].",
+        "J" :"Average number of synapses between populations.",
+        "a_1" :"Average probability of synaptic contacts in the feedback excitatory loop.",
+        "a_2" :"Average probability of synaptic contacts in the slow feedback excitatory loop.",
+        "a_3" :"Average probability of synaptic contacts in the feedback inhibitory loop.",
+        "a_4" :"Average probability of synaptic contacts in the slow feedback inhibitory loop.",
+        "p_min" :"Minimum input firing rate.",
+        "p_max" :"Maximum input firing rate.",
+        "mu" :"Mean input firing rate"
+    },
     "references": [
         "[JR_1995]  Jansen, B., H. and Rit V., G., *Electroencephalogram and visual evoked potential generation in a mathematical model of coupled cortical columns*, Biological Cybernetics (73) 357:366, 1995.",
         "[J_1993] Jansen, B., Zouridakis, G. and Brandt, M., *A neurophysiologically-based mathematical model of flash visual evoked potentials*"

@@ -28,6 +28,20 @@
         "beta": 1.0,
         "gamma": 1.0
     },
+    "docs":{
+        "tau": "A time-scale hierarchy can be introduced for the statevariables :math:`V` and :math:`W`. Default parameter is 1, which means no time-scale hierarchy.",
+        "I": "Baseline shift of the cubic nullcline",
+        "a": "Vertical shift of the configurable nullcline",
+        "b": "Linear slope of the configurable nullcline",
+        "c": "Parabolic term of the configurable nullcline",
+        "d": "Temporal scale factor. Warning: do not use it unless you know what you are doing and know about time tides.",
+        "e": "Coefficient of the quadratic term of the cubic nullcline.",
+        "f": "Coefficient of the cubic term of the cubic nullcline.",
+        "g": "Coefficient of the linear term of the cubic nullcline.",
+        "alpha": "Constant parameter to scale the rate of feedback from the slow variable to the fast variable.",
+        "beta": "Constant parameter to scale the rate of feedback from the slow variable to itself",
+        "gamma": "Constant parameter to reproduce FHN dynamics where excitatory input currents are negative. It scales both I and the long range coupling term."
+    },
     "references": [
         "[FH_1961] FitzHugh, R., *Impulses and physiological states in theoretical models of nerve membrane*, Biophysical Journal 1: 445, 1961.",
         "[Nagumo_1962] Nagumo et.al, *An Active Pulse Transmission Line Simulating Nerve Axon*, Proceedings of the IRE 50: 2061, 1962.",

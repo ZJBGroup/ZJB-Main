@@ -27,6 +27,16 @@
         "cr": 1.0,
         "cv": 0.0
     },
+    "docs":{
+        "tau": "Characteristic time",
+        "I":"Characteristic time",
+        "Delta": "Mean heterogeneous noise",
+        "J": "Mean Synaptic weight.",
+        "eta": "Constant parameter to scale the rate of feedback from the firing rate variable to itself",
+        "Gamma": "Half-width of synaptic weight distribution",
+        "cr":"It is the weight on Coupling through variable r.",
+        "cv" :"It is the weight on Coupling through variable V."
+    },
     "references": [
         "[Montbrio_Pazo_Roxin_2015] Montbri\u00f3, E., Paz\u00f3, D., & Roxin, A. (2015). Macroscopic description for networks of spiking neurons. *Physical Review X*, 5(2), 021028."
     ]
