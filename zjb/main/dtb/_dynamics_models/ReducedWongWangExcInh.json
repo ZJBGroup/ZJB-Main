@@ -70,7 +70,7 @@
         "tau_i" :"[ms]. Inhibitory population NMDA decay time constant.",
         "J_i" :"[nA] Local inhibitory current",
         "W_i" :"Inhibitory population external input scaling weight",
-        "I_o" :"[nA]. Effective external input",
+        "I_0" :"[nA]. Effective external input",
         "I_ext" :"[nA]. Effective external stimulus input",
         "G" :"Global coupling scaling",
         "lamda" :"Inhibitory global coupling scaling"
