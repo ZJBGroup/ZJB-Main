@@ -110,8 +110,8 @@
         "[ZL_1978] Zetterberg LH, Kristiansson L and Mossberg K. Performance of a Model for a Local Neuron Population. Biological Cybernetics 31, 15-26, 1978.",
         "[JB_1995]  Jansen, B., H. and Rit V., G., *Electroencephalogram and visual evoked potential generation in a mathematical model of coupled cortical columns*, Biological Cybernetics (73) 357:366, 1995.",
         "[JB_1993] Jansen, B., Zouridakis, G. and Brandt, M., *A neurophysiologically-based mathematical model of flash visual evoked potentials*",
-        "[M_2007] Moran",
-        "[S_2010] Spiegler",
-        "[A_2012] Auburn"
+        "[M_2007] Moran RJ, Stephan KE, Kiebel SJ, Rombach N, O'Connor WT, Murphy KJ, Reilly RB, Friston KJ. Bayesian estimation of synaptic physiology from the spectral responses of neural masses. Neuroimage. 2008 Aug 1;42(1):272-84. doi: 10.1016/j.neuroimage.2008.01.025. Epub 2008 Feb 1.",
+        "[S_2010] Spiegler A, Kiebel SJ, Atay FM, Knösche TR. Bifurcation analysis of neural mass models: Impact of extrinsic inputs and dendritic time constants. Neuroimage. 2010 Sep;52(3):1041-58. doi: 10.1016/j.neuroimage.2009.12.081. Epub 2010 Jan 4.",
+        "[A_2012] Aburn MJ, Holmes CA, Roberts JA, Boonstra TW, Breakspear M. Critical fluctuations in cortical models near instability. Front Physiol. 2012 Aug 20;3:331. doi: 10.3389/fphys.2012.00331. "
     ]
 }
