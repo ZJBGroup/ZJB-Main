@@ -10,6 +10,22 @@ from pyqtgraph.opengl.shaders import FragmentShader, ShaderProgram, VertexShader
 
 
 class SurfaceViewWidget(gl.GLViewWidget):
+    """
+    用于在PyQt5和Pyqtgraph环境中显示surface三维可视化的小部件。
+
+    Attributes
+    ----------
+    surface :  optional
+        用于显示的surface对象。
+    md : gl.MeshData, optional
+        surface的网格数据。
+    color_map : pg.colormap.Colormap
+        颜色映射表，用于着色。
+    faces : np.ndarray, optional
+        surface网格的面。
+    vertexes : np.ndarray, optional
+        surface网格的顶点。
+    """
     def __init__(self):
         super().__init__()
 
@@ -25,6 +41,14 @@ class SurfaceViewWidget(gl.GLViewWidget):
         # self.setSurface(surface)
 
     def setSurface(self, surface):
+        """
+       设置并显示surface。
+
+       Parameters
+       ----------
+       surface : Surface
+           要显示的surface对象。
+       """
         self.vertexes = surface.vertices  # 顶点
         self.faces = surface.faces  # 三角面
 
@@ -70,6 +94,16 @@ class SurfaceViewWidget(gl.GLViewWidget):
         self.addItem(self.surface)
 
     def setColorMap(self, name: str, source=None):
+        """
+        设置使用的颜色映射表。
+
+        Parameters
+        ----------
+        name : str
+            颜色映射表的名称。
+        source : str, optional
+            颜色映射表的来源，可为存储的路径或常规颜色组名。
+        """
         # 如果没有color map源，则读取路径
         if source is None:
             self.color_map = pg.colormap.get(name)
@@ -82,12 +116,32 @@ class SurfaceViewWidget(gl.GLViewWidget):
         self.surface.update()
 
     def setShader(self, shader_program):
+        """
+        设置用于渲染surface的着色器程序。
+
+        Parameters
+        ----------
+        shader_program : ShaderProgram
+            使用的着色器程序。
+        """
         self.surface.setShader(shader=shader_program)
         self.surface.vertexes = None
         self.surface.update()
 
 
 class AtlasSurfaceViewWidget(SurfaceViewWidget):
+    """
+    用于显示脑图谱三维可视化的小部件，继承自SurfaceViewWidget。
+
+    Attributes
+    ----------
+    region_signal : pyqtSignal
+        当选择区域时发出的信号。
+    labels : np.ndarray, optional
+        脑区标签。
+    ampl : np.ndarray, optional
+        用于颜色映射的数组。
+    """
     region_signal = pyqtSignal(int)
 
     def __init__(self):
@@ -98,6 +152,18 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         self._mouse_move = False
 
     def setAtlas(self, atlas, surface, surface_region_mapping):
+        """
+        设置并显示三维脑图谱。
+
+        Parameters
+        ----------
+        atlas : Atlas
+            使用的大脑图谱。
+        surface : Surface
+            要显示的皮层对象。
+        surface_region_mapping : np.ndarray
+            皮层顶点到不同脑区的映射。
+        """
         self.setSurface(surface)
         regioncolor_list = list(
             np.arange(atlas.labels.shape[0]) / atlas.labels.shape[0]
@@ -105,6 +171,16 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         self.setRegionColor(surface_region_mapping, regioncolor_list)
 
     def setRegions(self, atlas, surface_region_mapping):
+        """
+       设置不同脑区独立区块。
+
+       Parameters
+       ----------
+       atlas : Atlas
+           使用的大脑图谱。
+       surface_region_mapping : np.ndarray
+           皮层顶点到不同脑区的映射。
+       """
         for region in range(atlas.labels.shape[0]):
             # region = 1
             index_vertexes = np.where(surface_region_mapping.data.squeeze() == region)
@@ -135,6 +211,16 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         self._split = True
 
     def setRegionColor(self, surface_region_mapping, regioncolor: list):
+        """
+        设置不同脑区的颜色。
+
+        Parameters
+        ----------
+        surface_region_mapping : np.ndarray
+            皮层顶点到不同脑区的映射。
+        regioncolor : list
+            不同脑区的颜色列表。
+        """
         # 标签; -1是因为regionmapping中有-1
         self.labels = surface_region_mapping.data - 1
         self.ampl = np.array(regioncolor)[self.labels]  # 颜色只和对应脑区有关
@@ -144,6 +230,7 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         self.surface.update()
 
     def mouseReleaseEvent(self, event):
+        """鼠标释放事件处理。"""
         if self._mouse_move == True:
             self._mouse_move = False
             return
@@ -164,5 +251,6 @@ class AtlasSurfaceViewWidget(SurfaceViewWidget):
         self._mouse_move = False
 
     def mouseMoveEvent(self, event):
+        """鼠标移动事件处理。"""
         super().mouseMoveEvent(event)
         self._mouse_move = True

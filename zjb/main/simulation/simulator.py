@@ -27,6 +27,24 @@ TEMPLATE = Template(
 
 
 class Simulator(HasPrivateTraits, HasRequiredTraits):
+    """
+    Attributes
+    ----------
+    model : Instance(DynamicsModel)
+        动力学模型实例，用于仿真。
+    states : Dict(Str, Union(Float, FloatVector))
+        仿真的状态变量。
+    parameters : Dict(Str, Union(Float, FloatVector))
+        动力学模型的参数。
+    connectivity : Instance(SpaceCorrelation)
+        空间相关性连接的实例，描述不同节点间的连接性。
+    solver : Instance(Solver)
+        求解器实例，用于数值求解仿真的微分方程。
+    monitors : List(Instance(Monitor))
+        监视器列表，用于在仿真过程中采样数据。
+    t : Float
+        仿真总时长。
+    """
     model = Instance(DynamicsModel, required=True)
 
     states = Dict(Str, Union(Float, FloatVector))
@@ -42,6 +60,9 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
     t = Float(1000)
 
     def build(self):
+        """
+        构建仿真所需的代码和环境。这个方法将根据动力学模型的状态变量、参数和解算器设置来准备仿真的执行环境。
+        """
         for name in self.model.state_variables:
             self.states.setdefault(name, 0)
         for name, parameter in self.model.parameters.items():
@@ -71,6 +92,14 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
         ] = self._env["simulator"]
 
     def __call__(self):
+        """
+        执行仿真并返回结果。如果仿真环境尚未构建，首先调用 build 方法构建环境。
+
+        Returns
+        -------
+        results
+            仿真结果，通常包括各个状态变量和监视器采集的数据。
+        """
         if self._simulator is None:  # type: ignore
             self.build()
 

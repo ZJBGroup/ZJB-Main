@@ -5,6 +5,7 @@
 未提供初始值将会在GUI中以被分析对象的数据属性为初始值，并提供“load”按钮
 2. 在同级菜单的“__init__.py”文件中暴露该函数接口即可
 """
+
 import numpy as np
 
 
@@ -15,7 +16,25 @@ def array_sum(
     weight_1: float = 0.5,
     weight_2: float = 0.5,
 ):
-    """自定义分析示例, 计算两个矩阵加权之和, 默认权重为0.5"""
+    """
+    自定义分析示例, 计算两个矩阵加权之和, 默认权重为0.5
+
+    Parameters
+    ----------
+    array_1 : np.ndarray
+        第一个输入的矩阵
+    array_2 : np.ndarray
+        第二个输入的矩阵
+    weight_1 : float, optional
+        第一个矩阵的权重，默认为0.5
+    weight_2 : float, optional
+        第二个矩阵的权重，默认为0.5
+
+    Returns
+    -------
+    result : np.ndarray
+        输出矩阵，为两个输入矩阵的加权之和
+    """
 
     result = array_1 * weight_1 + array_2 * weight_2
     return result

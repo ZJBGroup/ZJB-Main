@@ -22,22 +22,46 @@ from zjb.dos.data import Data
 
 
 class HasExpression(HasPrivateTraits, HasRequiredTraits):
+    """表达式的基类"""
     expression = Expression(required=True)
 
 
 class StateVariable(HasExpression):
+    """状态变量类，继承自HasExpression。"""
     pass
 
 
 class CouplingVariable(HasExpression):
+    """耦合变量类，继承自HasExpression。"""
     pass
 
 
 class TransientVariable(HasExpression):
+    """瞬态变量类，继承自HasExpression。"""
     pass
 
 
 class DynamicsModel(Data):
+    """
+    动力学模型类，用于存储和处理动力学相关数据。
+
+    Attributes
+    ---------
+    name : Str
+        动力学模型的名称。
+    state_variables : Dict(Str, Instance(StateVariable))
+        状态变量字典，包括每个状态变量的实例。
+    coupling_variables : Dict(Str, Instance(CouplingVariable))
+        耦合变量字典，包括每个耦合变量的实例。
+    transient_variables : Dict(Str, Instance(TransientVariable))
+        瞬态变量字典，包括每个瞬态变量的实例。
+    parameters : Dict(Str, Float)
+        参数字典，包括每个参数的数值。
+    docs : Dict(Str, Str)
+        文档字典，包含模型相关的文档说明。
+    references : List(Str)
+        参考文献列表，包含与模型相关的参考文献。
+    """
     name = Str()
 
     state_variables = Dict(Str, Instance(StateVariable))
@@ -54,6 +78,19 @@ class DynamicsModel(Data):
 
     @classmethod
     def from_file(cls, filename: str):
+        """
+        从JSON文件中加载动力学模型数据，创建并返回一个模型实例。
+
+        Parameters
+        ----------
+        filename : str
+            要读取的文件名。
+
+        Returns
+        -------
+        DynamicsModel
+            根据JSON文件中的数据创建的动力学模型实例。
+        """
         with open(filename) as f:
             obj = json.load(f)
         obj["state_variables"] = {
@@ -72,6 +109,19 @@ class DynamicsModel(Data):
 
     @classmethod
     def from_name(cls, name: str):
+        """
+        根据动力学模型的名称加载相应的JSON文件，并创建模型实例。
+
+        Parameters
+        ----------
+        name : str
+            动力学模型的名称。
+
+        Returns
+        -------
+        DynamicsModel
+            根据指定名称创建的动力学模型实例。
+        """
         file = Path(__file__).parent / "_dynamics_models" / f"{name}.json"
         if not file.exists():
             raise ValueError(f"{name} not found.")
@@ -79,6 +129,14 @@ class DynamicsModel(Data):
 
     @classmethod
     def list_names(cls):
+        """
+        列出可用的动力学模型名称。
+
+        Returns
+        -------
+        list
+            包含所有可用动力学模型名称的列表。
+        """
         return [
             file.stem
             for file in (Path(__file__).parent / "_dynamics_models").iterdir()
@@ -94,6 +152,28 @@ class DynamicsModel(Data):
         trajectory_duration: float,
         show=False,
     ):
+        """
+        对动力学模型进行相平面分析。
+
+        Parameters
+        ----------
+        target_vars : dict
+            目标的状态变量及其范围。
+        fixed_vars : dict
+            固定的状态变量及值。
+        resolutions : dict
+            状态变量相平面分析的步长。
+        trajectory : dict
+            初始轨迹的设定。
+        trajectory_duration : float
+            轨迹持续的时间。
+        show : bool, optional
+            是否显示分析结果，默认为False。
+
+        Returns
+        -------
+        相平面分析的结果的展示图像。
+        """
         pp_analyse = PhasePlaneFunc()
         pp_analyse.model = self
         pp_analyse.target_vars = target_vars
@@ -112,6 +192,26 @@ class DynamicsModel(Data):
         resolutions: dict,
         show=False,
     ):
+        """
+        对动力学模型进行分岔分析。
+
+        Parameters
+        ----------
+        target_vars : dict
+            目标状态变量的范围。
+        fixed_vars : dict
+            固定的状态变量的值。
+        target_pars : dict
+            目标参数的范围。
+        resolutions : dict
+            分析目标参数时的步长。
+        show : bool, optional
+            是否显示分析结果，默认为False。
+
+        Returns
+        -------
+        分岔分析结果的展示图s
+        """
         bifurcation_analyse = BifurcationFunc()
         bifurcation_analyse.model = self
         bifurcation_analyse.target_vars = target_vars
@@ -127,8 +227,21 @@ class DefineExpression:
 
     @classmethod
     def var_expression(cls, model: DynamicsModel, var_name: str):
-        """Model状态变量表达式"""
+        """
+        根据指定的动力学模型和状态变量名，生成该状态变量的表达式。
 
+        Parameters
+        ----------
+        model : DynamicsModel
+            动力学模型实例。
+        var_name : str
+            要生成表达式的变量名。
+
+        Returns
+        -------
+        str:
+           动态成的状态变量表达式的字符串。
+        """
         # state_variables
         states = ",".join(model.state_variables.keys())
 
@@ -200,10 +313,12 @@ class ModelTypesetter(bp.DynamicalSystem):
 
 
 class PhasePlaneAnalyzer(ModelTypesetter):
+    """相平面分析器"""
     pass
 
 
 class BifurcationAnalyzer(ModelTypesetter):
+    """分岔分析器"""
     pass
 
 
@@ -216,7 +331,16 @@ class Plots(Data):
 
 
 class PhasePlane_2D(bp.analysis.PhasePlane2D):
+    """相平面2D分析类，继承自brainpy.analysis.PhasePlane2D。"""
     def show_figure_data(self):
+        """
+        获取当前matplotlib图形的Figure对象。
+
+        Returns
+        -------
+        Figure
+            当前的matplotlib图形对象。
+        """
         global plt
         if plt is None:
             from matplotlib import pyplot as plt
@@ -225,7 +349,21 @@ class PhasePlane_2D(bp.analysis.PhasePlane2D):
 
 
 class Bifurcation_2D(bp.analysis.Bifurcation2D):
+    """分岔2D分析类，继承自brainpy.analysis.Bifurcation2D。"""
     def show_figure_data(self, var):
+        """
+        获取相应matplotlib图形的Figure对象。
+
+        Parameters
+        ----------
+        var : str
+            变量名，用于标识图形。
+
+        Returns
+        -------
+        Figure
+            对应变量的matplotlib图形对象。
+        """
         global plt
         if plt is None:
             from matplotlib import pyplot as plt
@@ -234,6 +372,26 @@ class Bifurcation_2D(bp.analysis.Bifurcation2D):
 
 
 class PhasePlanePlots(Plots):
+    """
+    相平面绘图类，用于存储和展示相平面分析结果。
+
+    Attributes
+    ----------
+    dynamicsModel : Instance(DynamicsModel)
+        关联的动力学模型实例。
+    target_vars : Dict
+        目标状态变量的范围。
+    fixed_vars : Dict
+        固定状态变量的值。
+    resolutions : Dict
+        状态变量分析的分辨率（步长）。
+    trajectory : Dict
+        初始轨迹的设定。
+    trajectory_duration : Float
+        轨迹持续的时间。
+    fixed_points : Any
+        定点坐标，或无定点。
+    """
     dynamicsModel = Instance(DynamicsModel)
 
     target_vars = Dict()
@@ -250,6 +408,24 @@ class PhasePlanePlots(Plots):
 
 
 class BifurcationPlots(Plots):
+    """
+    分岔绘图类，用于存储和展示分岔分析结果。
+
+    Attributes
+    ----------
+    figure2 : Instance(Figure)
+        2D分岔分析产生的第二副分岔图。
+    dynamicsModel : Instance(DynamicsModel)
+        关联的动力学模型实例。
+    target_vars : Dict
+        目标状态变量的范围。
+    fixed_vars : Dict
+        固定状态变量的值。
+    target_pars : Dict
+        目标参数的范围。
+    resolutions : Dict
+        分析目标参数的分辨率（步长）。
+    """
     figure2 = Instance(Figure)  # 2D分岔分析会产生2副分岔图
 
     dynamicsModel = Instance(DynamicsModel)
@@ -264,7 +440,26 @@ class BifurcationPlots(Plots):
 
 
 class PhasePlaneFunc(HasPrivateTraits):
-    """对Model进行相平面分析"""
+    """
+    对动力学模型进行相平面分析的类。
+
+    Attributes
+    ----------
+    model : DynamicsModel
+        要分析的动力学模型实例。
+    ppanalyzer : PhasePlaneAnalyzer
+        相平面分析器的实例。
+    target_vars : Dict
+        目标状态变量的范围。
+    fixed_vars : Dict
+        固定状态变量的值。
+    resolutions : Dict
+        状态变量分析的分辨率。
+    trajectory : Dict
+        初始轨迹的设定。
+    trajectory_duration : Float
+        轨迹持续的时间。
+    """
 
     model: DynamicsModel = Instance(DynamicsModel, input=True)
 
@@ -281,6 +476,19 @@ class PhasePlaneFunc(HasPrivateTraits):
     trajectory_duration = Float()
 
     def __call__(self, show=False):
+        """
+        执行相平面分析并返回结果。
+
+        Parameters
+        ----------
+        show : bool, optional
+            是否显示分析结果，默认为False。
+
+        Returns
+        -------
+        PhasePlanePlots
+            相平面分析的结果，包括图形和相关数据。
+        """
         plt.cla()
         bp.math.enable_x64()
         transmodel = self.model
@@ -324,7 +532,24 @@ class PhasePlaneFunc(HasPrivateTraits):
 
 
 class BifurcationFunc(HasPrivateTraits):
-    """对Model进行分岔分析"""
+    """
+    对动力学模型进行分岔分析的类。
+
+    Attributes
+    ----------
+    model : DynamicsModel
+        要分析的动力学模型实例。
+    bifurcation_analyzer : BifurcationAnalyzer
+        分岔分析器的实例。
+    target_vars : Dict
+        目标状态变量的范围。
+    fixed_vars : Dict
+        固定状态变量的值。
+    target_pars : Dict
+        目标参数的范围。
+    resolutions : Dict
+        分析目标参数的分辨率（步长）。
+    """
 
     model: DynamicsModel = Instance(DynamicsModel, input=True)
 
@@ -341,6 +566,19 @@ class BifurcationFunc(HasPrivateTraits):
     resolutions = Dict()
 
     def __call__(self, show=False):
+        """
+        执行分岔分析并返回结果。
+
+        Parameters
+        ----------
+        show : bool, optional
+            是否显示分析结果，默认为False。
+
+        Returns
+        -------
+        BifurcationPlots
+            分岔分析的结果，包括图形和相关数据。
+        """
         plt.cla()
         bp.math.enable_x64()
         model = self.bifurcation_analyzer(self.model)

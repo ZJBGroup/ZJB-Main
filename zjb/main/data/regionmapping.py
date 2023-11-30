@@ -14,6 +14,18 @@ if TYPE_CHECKING:
 
 
 class SurfaceRegionMapping(Data):
+    """
+    表面区域映射类。该类用于创建和处理表面区域映射。
+
+    Attributes
+    ----------
+    space : SurfaceSpace
+        表面空间实例，表示数据所在的空间。
+    atlas : Atlas
+        图谱实例，用于区域映射。
+    data : RequiredIntVector
+        整型向量表示的映射数据。
+    """
     space = Instance(SurfaceSpace, required=True)
 
     atlas = Instance(Atlas, required=True)
@@ -28,6 +40,25 @@ class SurfaceRegionMapping(Data):
         space: "SurfaceSpace | str",
         atlas: "Atlas | str",
     ):
+        """
+        从左右脑标签的gii文件构造 SurfaceRegionMapping 实例。
+
+        Parameters
+        ----------
+        left_label : GiftiImage 或 str
+            左脑的标签文件，可以是 GiftiImage 实例或文件路径。
+        right_label : GiftiImage 或 str
+            右脑的标签文件，可以是 GiftiImage 实例或文件路径。
+        space : SurfaceSpace 或 str
+            表面空间实例或文件路径。
+        atlas : Atlas 或 str
+            图谱实例或文件路径。
+
+        Returns
+        -------
+        SurfaceRegionMapping
+            由指定参数构造的 SurfaceRegionMapping 实例。
+        """
         from nibabel.gifti.gifti import GiftiImage
 
         if not isinstance(left_label, GiftiImage):
@@ -44,7 +75,23 @@ class SurfaceRegionMapping(Data):
         return cls(space=space, atlas=atlas, data=data)
 
     @classmethod
-    def from_txt(cls, space: "SurfaceSpace | str", atlas: "Atlas | str", path: str):
+    def from_txt(cls, space: "SurfaceSpace", atlas: "Atlas", path: str):
+        """
+
+        Parameters
+        ----------
+        space : SurfaceSpace
+            表面空间实例。
+        atlas : Atlas
+            图谱实例。
+        path : str
+            包含映射数据的文本文件路径。
+
+        Returns
+        -------
+         SurfaceRegionMapping
+            由指定参数构造的 SurfaceRegionMapping 实例。
+        """
         f = open(path)
         lines = f.readlines()
         rows = len(lines)
@@ -62,6 +109,20 @@ class SurfaceRegionMapping(Data):
 
 
 class VolumeRegionMapping(Data):
+    """
+    体素空间映射类。
+
+    该类用于表示体素空间中的区域映射数据。
+
+    Attributes
+    ----------
+    volume : VolumeSpace
+        体素空间的实例。
+    atlas : Atlas
+        图谱的实例。
+    data : Array
+        包含映射数据的 NumPy 数组。
+    """
     volume = Instance(VolumeSpace, required=True)
 
     atlas = Instance(Atlas, required=True)

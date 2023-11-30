@@ -11,6 +11,14 @@ TEMPLATE = Template(
 
 
 class Monitor(HasPrivateTraits, metaclass=ABCMetaHasTraits):
+    """
+    监视器的抽象基类，用于定义监视器的基本接口。
+
+    Attributes
+    ----------
+    expression : Str
+        监视器中采样的表达式。
+    """
     expression = Str(required=True)
 
     @abstractmethod
@@ -27,14 +35,24 @@ if TYPE_CHECKING:
 
 
 class _TemplateMonitor(Monitor):
+    """
+    模板监视器类，提供基于Mako模板的监视器实现。
+
+    Attributes
+    ----------
+    _template_name : str
+        模板文件中定义的模板名称。
+    """
     _template_name = ""
 
     def render_init(self, name: str, env: dict[str, Any]) -> str:
+        """根据模板渲染初始化代码。"""
         return TEMPLATE.get_def(self._template_name + "_init").render(  # type: ignore
             name=name, monitor=self, env=env
         )  # type: ignore
 
     def render_sample(self, name: str, env: dict[str, Any]) -> str:
+        """根据模板渲染采样代码。"""
         return TEMPLATE.get_def(self._template_name + "_sample").render(  # type: ignore
             name=name, monitor=self, env=env
         )  # type: ignore

@@ -17,6 +17,26 @@ ProjectInstance = TypedInstance["Project"]("Project", allow_none=False, module=_
 
 
 class Project(Data):
+    """
+    项目类，用于管理和组织与工作空间中项目相关的所有元素，如子项目、被试、DTB模型、DTB等。
+
+    Attributes
+    ----------
+    name : Str
+        项目的名称。
+    parent : ProjectInstance
+        父项目的引用。
+    children : List(ProjectInstance)
+        子项目列表。
+    subjects : List(Instance(Subject))
+        项目中包含的被试列表。
+    models : List(Instance(DTBModel))
+        项目中包含的DTB模型列表。
+    dtbs : List(Instance(DTB))
+        项目中包含的DTB列表。
+    data : List
+        项目中包含的其他数据，入分析结果等
+    """
     name = Str()
 
     parent = ProjectInstance
@@ -32,6 +52,7 @@ class Project(Data):
     data = List()
 
     def unbind(self):
+        """解除项目与其子元素的绑定关系"""
         if not self._manager:
             return
         for child in self.children:

@@ -7,13 +7,31 @@ from zjb.main.analysis.base import AnalyzerBase
 from zjb.main.data.series import TimeSeries
 
 
-def kld(x: np.ndarray, y: np.ndarray):
-    kld_result = 0.5 * (np.sum(x * np.log(x / y)) + np.sum(y * np.log(y / x)))
-    return kld_result
-
-
 class FCDAnalysis(HasTraits):
-    """计算节点的动态功能连接"""
+    """
+    动态功能连接（Functional Connectivity Dynamics, FCD）分析类。
+    用于计算时间序列数据中的动态功能连接。
+
+    Attributes
+    ----------
+    ts_emp : TimeSeries, input=True
+        输入的时间序列对象
+    method : str, input=True
+        功能连接的计算方法，可选"PCC"（皮尔森相关系数）、"CC"（相干性连接）或"MTD"（多重时间导数）
+    swc : bool, input=True
+        是否使用滑动窗口分析，默认为True
+    sw : float, input=True
+        滑动窗口的长度（秒），默认为1.0
+    sp : float, input=True
+        两个连续滑动窗口之间的跨度（秒），默认为0.5
+    f_lo : float, input=True
+        带通滤波的低频截止（Hz），默认为0.01
+    f_hi : float, input=True
+        带通滤波的高频截止（Hz），默认为1
+
+    __return__ :  np.ndarray, dtype=np.float32, output=True
+        输出的动态功能连接序列，每个元素是一个功能连接矩阵
+    """
 
     ts_emp: TimeSeries = Instance(TimeSeries, input=True)
 
@@ -36,6 +54,7 @@ class FCDAnalysis(HasTraits):
     __return__ = Array(dtype=np.float32, output=True)
 
     def __call__(self):
+        """执行动态功能连接分析"""
         if not self.ts_emp:
             raise ValueError("Lack of ts input")
         if (
@@ -54,6 +73,7 @@ class FCDAnalysis(HasTraits):
         return dFC
 
     def _compute_dFC_series(self, data: np.ndarray, tr: np.ndarray, fs: float):
+        """计算动态功能连接序列"""
         met_fc = {
             "PCC": self.pearson_corr_coeff,
             "CC": self.coherence_connectivty,
@@ -72,6 +92,7 @@ class FCDAnalysis(HasTraits):
     def _apply_bandpass_filter(
         self, x: np.ndarray, fs: float, order: int = 2
     ) -> np.ndarray:
+        """应用带通滤波器"""
         if np.isnan(fs):
             return x
         b, a = butter(order, [self.f_lo, self.f_hi], btype="band", fs=fs)
@@ -81,6 +102,7 @@ class FCDAnalysis(HasTraits):
     def __slide_temporal_windows(
         self, x: np.ndarray, t: float, fs: float, axis: int = 0
     ) -> np.ndarray:
+        """创建时间序列数据的滑动窗口"""
         x = np.swapaxes(x, 0, axis)
         sw_size = int(self.sw * fs)
         sp_size = int(self.sp * fs)
@@ -92,11 +114,13 @@ class FCDAnalysis(HasTraits):
 
     @staticmethod
     def pearson_corr_coeff(x: np.ndarray, axis_1: bool = True) -> np.ndarray:
+        """计算皮尔森相关系数"""
         fcm = np.corrcoef(x, rowvar=int(not axis_1))
         return fcm
 
     @staticmethod
     def cosine_similarity(x: np.ndarray, axis_1: bool = False) -> np.ndarray:
+        """计算余弦相似度"""
         norm = np.linalg.norm(x, axis=int(not axis_1))
         dot = np.matmul(x, x.T)
         simularity = dot / np.outer(norm, norm)
@@ -104,6 +128,7 @@ class FCDAnalysis(HasTraits):
 
     @staticmethod
     def coherence_connectivty(x: np.ndarray) -> np.ndarray:
+        """计算相干性连接"""
         phi = np.angle(hilbert(x))
         d_phi = np.abs(phi[:, :, np.newaxis] - phi[:, np.newaxis, :])
         d_phi = np.mean(d_phi, axis=0)
@@ -112,6 +137,7 @@ class FCDAnalysis(HasTraits):
 
     @staticmethod
     def mul_temporal_derivatives(x: np.ndarray) -> np.ndarray:
+        """计算多重时间导数"""
         dt = x[1:, :] - x[:-1, :]
         std = np.std(x, axis=0)
         dt_prod = np.multiply(dt[:, :, np.newaxis], dt[:, np.newaxis, :])
@@ -121,6 +147,7 @@ class FCDAnalysis(HasTraits):
 
     @staticmethod
     def eigval_eigvec_extraction(x: np.ndarray, n: int = 1) -> tuple:
+        """提取特征值和特征向量"""
         eigval_m, eigvect_m = np.linalg.eigh(x)
         eigvals = np.zeros(n, dtype=np.float32)
         eigvects = np.zeros((n, eigvect_m.shape[0]), dtype=np.float32)
@@ -135,7 +162,18 @@ class FCDAnalysis(HasTraits):
 
 
 class FCDMatrix(FCDAnalysis):
-    """计算节点的动态功能连接矩阵和稳定周期指数"""
+    """
+    计算节点的动态功能连接矩阵,这个类继承自 FCDAnalysis。
+
+    Attributes
+    ----------
+    comparison : Enum
+        比较的方法，包括'CS-LEi'（余弦相似度-主要特征向量）、'CS-UT'（余弦相似度-上三角）、'PCC-LEi'（皮尔森相关系数-主要特征向量）和'PCC-UT'（皮尔森相关系数-上三角）。
+    n_eig : int
+        计算稳定周期时用于提取的特征值数量。
+
+    __return__ : 返回动态功能连接矩阵。
+    """
 
     comparison = Enum("CS-LEi", "CS-UT", "PCC-LEi", "PCC-UT", input=True)
 
@@ -148,6 +186,7 @@ class FCDMatrix(FCDAnalysis):
     )
 
     def __call__(self):
+        """执行动态功能连接矩阵和稳定周期指数的计算"""
         if not self.ts_emp:
             raise ValueError("Lack of ts input")
         if (
@@ -169,6 +208,7 @@ class FCDMatrix(FCDAnalysis):
         return fcd_matrix
 
     def _compute_FCD_matrix(self, dFC: np.ndarray):
+        """根据输入的动态功能连接序列计算功能连接矩阵"""
         comparative_methods = {
             "CS": self.cosine_similarity,
             "PCC": self.pearson_corr_coeff,
@@ -183,6 +223,7 @@ class FCDMatrix(FCDAnalysis):
         return fcd_matrix
 
     def _extract_stable_eigs(self, fcd_matrix: np.ndarray, fs: float) -> tuple:
+        """从功能连接矩阵中提取稳定周期的特征值和特征向量"""
         stable_eigval = {}
         stable_eigvect = {}
         xir, xir_cutoff = self.__spectral_embedding(fcd_matrix)
@@ -199,6 +240,7 @@ class FCDMatrix(FCDAnalysis):
         return stable_eigval, stable_eigvect
 
     def __leading_eigvectors(self, dFC: np.ndarray) -> np.ndarray:
+        """从动态功能连接序列中提取主要特征向量"""
         V_s = np.ones(dFC.shape[:2], dtype=np.float32)
         for i in range(dFC.shape[0]):
             _, V_1 = self.eigval_eigvec_extraction(dFC[i], n=1)
@@ -206,6 +248,7 @@ class FCDMatrix(FCDAnalysis):
         return V_s
 
     def __upper_triangles(self, dFC: np.ndarray) -> np.ndarray:
+        """从动态功能连接序列中提取上三角矩阵"""
         V_s = np.ones((dFC.shape[0], dFC.shape[1] ** 2), dtype=np.float32)
         for i in range(dFC.shape[0]):
             V_1 = np.triu(dFC[i]).flatten()
@@ -213,6 +256,7 @@ class FCDMatrix(FCDAnalysis):
         return V_s
 
     def __spectral_embedding(self, fcd_matrix: np.ndarray, n_dim: int = 2) -> tuple:
+        """对功能连接矩阵进行谱计算及嵌入"""
         se = SpectralEmbedding(n_dim, affinity="precomputed")
         xi = se.fit_transform(fcd_matrix - fcd_matrix.min())
         xir = AnalyzerBase.compute_norms(xi, True, 1)
@@ -222,6 +266,7 @@ class FCDMatrix(FCDAnalysis):
     def __stable_periods_identification(
         self, fs: float, xir: np.ndarray, xir_cutoff: np.ndarray
     ) -> dict:
+        """根据谱嵌入结果计算稳定周期"""
         sw_size = int(self.sw * fs)
         sp_size = int(self.sp * fs)
 
@@ -239,6 +284,26 @@ class FCDMatrix(FCDAnalysis):
         return periods, periods_t
 
 
+def kld(x: np.ndarray, y: np.ndarray):
+    """
+    计算两个矩阵之间的Kullback-Leibler散度。
+
+    Parameters
+    ----------
+    x : np.ndarray
+        第一个矩阵。
+    y : np.ndarray
+        第二个矩阵。
+
+    Returns
+    -------
+    kld_result : float
+        x和y之间的Kullback-Leibler散度。
+    """
+    kld_result = 0.5 * (np.sum(x * np.log(x / y)) + np.sum(y * np.log(y / x)))
+    return kld_result
+
+
 def fcd_analysis(
     timeseries: TimeSeries,
     method: str = "CC",
@@ -247,6 +312,29 @@ def fcd_analysis(
     f_low: float = 0.01,
     f_high: float = 0.25,
 ):
+    """
+    执行FCD分析
+
+    Parameters
+    ----------
+    timeseries : TimeSeries
+        时间序列数据。
+    method : str, optional
+        功能连接的计算方法。
+    sw : float, optional
+        滑动窗口的长度（秒）。
+    spanning : float, optional
+        两个连续滑动窗口之间的跨度（秒）。
+    f_low : float, optional
+        带通滤波的低频截止（Hz）。
+    f_high : float, optional
+        带通滤波的高频截止（Hz）。
+
+    Returns
+    -------
+    dFC : np.ndarray
+        动态功能连接序列。
+    """
     fcd = FCDAnalysis(
         ts_emp=timeseries, method=method, sw=sw, sp=spanning, f_lo=f_low, f_hi=f_high
     )
@@ -264,6 +352,32 @@ def fcd_matrix(
     comparison: str = "PCC-UT",
     n_eig: int = 3,
 ):
+    """
+
+    Parameters
+    ----------
+    timeseries : TimeSeries
+        时间序列数据。
+    method : str, optional
+        功能连接的计算方法，默认为'CC'。
+    sw : float, optional
+        滑动窗口的长度（秒），默认为1.0秒。
+    spanning : float, optional
+        两个连续滑动窗口之间的跨度（秒），默认为0.5秒。
+    f_low : float, optional
+        带通滤波的低频截止（Hz），默认为0.01 Hz。
+    f_high : float, optional
+        带通滤波的高频截止（Hz），默认为0.25 Hz。
+    comparison : str, optional
+        比较方法，默认为'PCC-UT'。
+    n_eig : int, optional
+        在稳定周期分析中使用的特征值数量，默认为3。
+
+    Returns
+    -------
+    fcd_m : np.ndarray
+        计算得到的动态功能连接矩阵。
+    """
     fcd = FCDMatrix(
         ts_emp=timeseries,
         method=method,
@@ -279,22 +393,76 @@ def fcd_matrix(
 
 
 def pearson_correlation(array_1: np.ndarray, array_2: np.ndarray):
+    """
+    计算两个数组间的皮尔森相关系数。
+
+    Parameters
+    ----------
+    array_1 : np.ndarray
+        第一个矩阵。
+    array_2 : np.ndarray
+        第二个矩阵。
+
+    Returns
+    -------
+    result : float
+        两个数组间的皮尔森相关系数。
+    """
     result = np.corrcoef(array_1.flatten(), array_2.flatten())[0, 1]
     return result
 
 
 def self_pearson_correlation(timeseries: TimeSeries):
-    """计算节点之间的皮尔森相关系数"""
+    """
+    计算节点之间的皮尔森相关系数
+
+    Parameters
+    ----------
+    timeseries : TimeSeries
+        时间序列数据。
+
+    Returns
+    -------
+    corr_result : np.ndarray
+        节点间的皮尔森相关系数矩阵。
+    """
     corr_result = np.corrcoef(timeseries.data, rowvar=False)
     return corr_result
 
 
 def temporal_covariance(timeseries: TimeSeries):
-    """节点间的协方差"""
+    """
+    计算时间序列数据中各节点间的协方差。
+
+    Parameters
+    ----------
+    timeseries : TimeSeries
+        时间序列数据。
+
+    Returns
+    -------
+    covar_result : np.ndarray
+        节点间的协方差矩阵。
+    """
     covar_result = np.cov(timeseries.data, rowvar=False)
     return covar_result
 
 
 def timeseries_data_cropping(timeseries: TimeSeries, discard: int = 100):
+    """
+    从时间序列数据中裁剪掉前面一部分数据。
+
+    Parameters
+    ----------
+    timeseries : TimeSeries
+        时间序列数据。
+    discard : int, optional
+        要丢弃的数据点数量，默认为100。
+
+    Returns
+    -------
+    result : np.ndarray
+        裁剪后的时间序列数据。
+    """
     result = timeseries.data[discard:, :]
     return result
