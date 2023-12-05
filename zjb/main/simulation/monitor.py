@@ -3,7 +3,11 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
 from mako.template import Template
-from traits.api import ABCMetaHasTraits, Float, HasPrivateTraits, Int, Str
+from traits.api import ABCMetaHasTraits, Array, Float, HasPrivateTraits, Int, Str
+
+from zjb._traits.types import Instance
+
+from ..data.space import ChannelSpace
 
 TEMPLATE = Template(
     filename=str(Path(__file__).parent / "_templates" / "monitors.mako")
@@ -19,6 +23,7 @@ class Monitor(HasPrivateTraits, metaclass=ABCMetaHasTraits):
     expression : Str
         监视器中采样的表达式。
     """
+
     expression = Str(required=True)
 
     @abstractmethod
@@ -43,6 +48,7 @@ class _TemplateMonitor(Monitor):
     _template_name : str
         模板文件中定义的模板名称。
     """
+
     _template_name = ""
 
     def render_init(self, name: str, env: dict[str, Any]) -> str:
@@ -104,9 +110,41 @@ class BOLD(_TemplateMonitor):
     sample_interval = Int(10000)
 
 
+class Projection(_TemplateMonitor):
+    """映射监测器, 使用前导矩阵将源空间(通常是脑区空间)的脑活动映射为目标空间(通常是通道空间)的脑信号
+
+    Attributes
+    ----------
+    matrix: array
+        前导矩阵
+    space: ChannelSpace | None
+        传感器通道空间, by default None
+    sample_interval: int
+        下采样的间隔(以dt为单位), by default 1
+    """
+
+    _template_name = "projection"
+
+    matrix = Array()
+
+    space = Instance(ChannelSpace)
+
+    sample_interval = Int(1)
+
+
+class EEG(Projection):
+    """EEG信号监测器, 使用前导矩阵将源空间(通常是脑区空间)的脑活动映射为传感器通道空间的EEG信号"""
+
+
+class MEG(Projection):
+    """MEG信号监测器, 使用前导矩阵将源空间(通常是脑区空间)的脑活动映射为传感器通道空间的MEG信号"""
+
+
 MONITOR_DICT = {
     "raw": Raw,
     "sub_sample": SubSample,
     "temporal_average": TemporalAverage,
     "bold": BOLD,
+    "eeg": EEG,
+    "meg": MEG,
 }

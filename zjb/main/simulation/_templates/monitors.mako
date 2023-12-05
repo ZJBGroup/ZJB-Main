@@ -78,3 +78,19 @@ if __it % ${monitor.sample_interval} == ${monitor.sample_interval} - 1:
     )
     ${name}_i += 1
 </%def>
+
+
+<%def name="projection_init(name, monitor, env)">
+<%
+    env[f'{name}_matrix'] = monitor.matrix
+%>
+${name} = np.zeros((int(__nt / ${monitor.sample_interval}), ${name}_matrix.shape[1]))
+${name}_i = 0
+</%def>
+
+<%def name="projection_sample(name, monitor, env)">
+if __it % ${monitor.sample_interval} == ${monitor.sample_interval} - 1:
+    __tmp = ${monitor.expression}
+    ${name}[${name}_i] = __tmp @ ${name}_matrix
+    ${name}_i += 1
+</%def>
