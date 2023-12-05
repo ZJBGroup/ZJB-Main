@@ -24,7 +24,7 @@ ${name}_i = 0
 </%def>
 
 <%def name="temporal_average_sample(name, monitor, env)">
-${name}_temp = ${monitor.expression}
+${name}_temp += ${monitor.expression}
 if __it % ${monitor.sample_interval} == ${monitor.sample_interval} - 1:
     ${name}[${name}_i] = ${name}_temp / ${monitor.sample_interval}
     ${name}_temp = 0
@@ -51,8 +51,9 @@ ${name}_dt = __dt / 1000
 </%def>
 
 <%def name="bold_sample(name, monitor, env)">
+__tmp = ${monitor.expression}
 ${name}_s = ${name}_states[0] + ${name}_dt * (
-    ${monitor.expression} - ${name}_itaus * ${name}_states[0] - ${name}_itauf * (${name}_states[1] - 1)
+    __tmp - ${name}_itaus * ${name}_states[0] - ${name}_itauf * (${name}_states[1] - 1)
 )
 ${name}_f = ${name}_states[1] + ${name}_dt * ${name}_states[0]
 ${name}_via = np.power(${name}_states[2], ${name}_ialpha)
