@@ -4,6 +4,9 @@
     def indent2(text):
         return text.replace("\n", "\n        ")
 %>
+<%
+    from zjb.main.simulation.simulator import ExprParameter
+%>
 import numba as nb
 import numpy as np
 
@@ -11,8 +14,7 @@ import numpy as np
 @nb.njit(fastmath=True)
 def simulator(
     __t, __dt, __C,
-    ${','.join(model.state_variables)},
-    ${','.join(model.parameters)}
+    ${','.join(model.state_variables)}
 ):
     __nt = int(__t / __dt)
     __nr =  __C.shape[0]
@@ -27,6 +29,13 @@ def simulator(
     % endfor
 
     for __it in range(__nt):
+        __ct = __it * __dt
+        % for name, para in simulator.parameters.items():
+            % if isinstance(para, ExprParameter):
+        ${name} = ${para.expression}
+            % endif
+        % endfor
+
         ${solver.render(model, env) | indent2}
 
         % for i, monitor in enumerate(monitors):
