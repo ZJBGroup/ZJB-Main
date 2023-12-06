@@ -5,7 +5,7 @@
         return text.replace("\n", "\n        ")
 %>
 <%
-    from zjb.main.simulation.simulator import ExprParameter
+    from zjb.main.simulation.simulator import NumbaFuncParameter
 %>
 import numba as nb
 import numpy as np
@@ -31,8 +31,8 @@ def simulator(
     for __it in range(__nt):
         __ct = __it * __dt
         % for name, para in simulator.parameters.items():
-            % if isinstance(para, ExprParameter):
-        ${name} = ${para.expression}
+            % if isinstance(para, NumbaFuncParameter):
+        ${name} = _${name}_func(${para._arg_str})
             % endif
         % endfor
 
