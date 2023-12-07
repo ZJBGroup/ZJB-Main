@@ -2,34 +2,28 @@
 仿真刺激模块, 用于生成具有不同时空模式的刺激, 可以作为仿真器的参数值
 """
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Callable
 
-from traits.api import Expression, Float, Property, Union, property_depends_on
+import numba as nb
+import numpy as np
+from traits.api import Float, Int, Property, Union, property_depends_on
 
 from ..trait_types import FloatVector
-from .simulator import ExprParameter
+from .simulator import NumbaFuncParameter
 
 if TYPE_CHECKING:
+    from typing import Callable
+
     from numpy import float_
     from numpy.typing import NDArray
 
 
-def _delegate_parameters_property(name: str, trait: Any = None, **metadata: Any):
-    def fget(object: ExprParameter, name: str):
-        return object.parameters[name]
-
-    def fset(object: ExprParameter, name: str, value: Any):
-        object.parameters[name] = value
-
-    return Property(fget=fget, fset=fset, trait=trait, **metadata)
-
-
-class Stimulus(ExprParameter):
+class Stimulus(NumbaFuncParameter):
     """刺激是用于激活或抑制大脑的电流, 可以由植入大脑或放置于头皮的电极直接提供,
     或通过向头部施加磁场来产生感应电流(TMS)
 
     刺激具有特定的时间模式, 并且会按照特定的空间分布作用到各个脑区:
-        - 时间模式是关于时间的函数(表达式);
+        - 时间模式是关于时间的函数;
         - 空间分布可以是数值, 刺激会按照同样的强度作用到所有脑区;
         - 空间分布也可以是长度为脑区数的向量, 该向量对应刺激作用到对应脑区的相对强度
 
@@ -37,29 +31,36 @@ class Stimulus(ExprParameter):
     ----------
     space: float | array[float], shape (n_regions)
         刺激的空间分布, by default 1
-    time: str
-        刺激的时间模式表达式, 应当是当前仿真时间`__ct`的函数
+    numba_func: Callable[[float], float | array[float]], shape (n_regions)
+        根据时间生成具有空间分布的刺激的numba函数
     """
 
-    expr = Property()
+    space: "float | NDArray[float_]" = Union(Float(1), FloatVector)  # type: ignore
 
     dependencies = ["__ct"]
 
-    space: "float | NDArray[float_]" = _delegate_parameters_property(
-        "space", Union(Float, FloatVector)
-    )
+    numba_func: "Callable[[float], float | NDArray[float_]]" = Property()
 
-    time = Expression("")
+    def _get_numba_func(self):
+        space = self.space
+        time_func = self.make_time_func()
 
-    parameters = {"space": 1}
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            return space * time_func(t)
 
-    @property_depends_on("time")
-    def _get_expr(self):
-        return f"space * ({self.time})" if self.time else "space"
+        return _numba_func
+
+    def make_time_func(self) -> "Callable[[float], float]":
+        """创建时间模式函数, 必须返回一个`numba.njit`编译的函数
+
+        返回的函数接收一个参数t, 返回刺激强度
+        """
+        raise NotImplementedError
 
 
 class PulseStimulus(Stimulus):
-    """脉冲刺激
+    """脉冲刺激, 继承自 :py:class:`Stimulus`
 
     Attributes
     ----------
@@ -71,19 +72,72 @@ class PulseStimulus(Stimulus):
         脉冲宽度, by default 1
     """
 
-    time = "np.where((__ct >= start) & (__ct < start+width), amp, 0)"
+    amp = Float(1)
 
-    parameters = {"space": 1, "amp": 1, "start": 1, "width": 1}
+    start = Float(1)
 
-    amp: float = _delegate_parameters_property("amp", Float())
+    width = Float(1)
 
-    start: float = _delegate_parameters_property("start", Float())
+    numba_func = Property()
 
-    width: float = _delegate_parameters_property("width", Float())
+    @property_depends_on(["space", "amp", "start", "width"])
+    def _get_numba_func(self):
+        space = self.space
+        amp, start, width = self.amp, self.start, self.width
+
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            if start <= t < start + width:
+                return space * amp
+            return space * 0
+
+        return _numba_func
+
+
+class NCyclePulseStimulus(PulseStimulus):
+    """N周期脉冲刺激, 继承自 :py:class:`PulseStimulus`
+
+    Attributes
+    ----------
+    period: float
+        脉冲周期, by default 2
+    count: int
+        脉冲周期数, 小于等于0表示无限周期, by default 0
+    """
+
+    period = Float(2)
+
+    count = Int(0)
+
+    numba_func = Property()
+
+    @property_depends_on(["space", "amp", "start", "width", "phase", "period", "count"])
+    def _get_numba_func(self):
+        space = self.space
+        amp, start, width, period, count = (
+            self.amp,
+            self.start,
+            self.width,
+            self.period,
+            self.count,
+        )
+
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            if t < start:
+                return space * 0
+            if count > 0 and t > start + period * count:
+                return space * 0
+            if (t - start) % period < width:
+                return space * amp
+            return space * 0
+
+        return _numba_func
 
 
 class SinusoidStimulus(Stimulus):
-    """正弦刺激, 形如 :math:`amp * \\sin(2 pi * freq * t + phase) + offset`
+    """正弦刺激, 形如 :math:`amp * \\sin(2 \\pi * freq * t + phase) + offset`,
+    继承自 :py:class:`Stimulus`
 
     Attributes
     ----------
@@ -97,14 +151,23 @@ class SinusoidStimulus(Stimulus):
         直流偏置强度, by default 0
     """
 
-    time = "amp * np.sin(2 * np.pi * freq * __ct + phase) + offset"
+    amp = Float(1)
 
-    parameters = {"space": 1, "amp": 1, "freq": 1, "phase": 0, "offset": 0}
+    freq = Float(1)
 
-    amp: float = _delegate_parameters_property("amp", Float)
+    phase = Float(0)
 
-    freq: float = _delegate_parameters_property("freq", Float)
+    offset = Float(0)
 
-    phase: float = _delegate_parameters_property("phase", Float)
+    numba_func = Property()
 
-    offset: float = _delegate_parameters_property("offset", Float)
+    @property_depends_on(["space", "amp", "freq", "phase", "offset"])
+    def _get_numba_func(self):
+        space = self.space
+        amp, freq, phase, offset = self.amp, self.freq, self.phase, self.offset
+
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            return space * amp * np.sin(2 * np.pi * freq * t + phase) + offset
+
+        return _numba_func
