@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Callable
 
 import numba as nb
 import numpy as np
-from traits.api import Float, Int, Property, Union, property_depends_on
+from traits.api import Array, Float, Int, Property, Union, property_depends_on
 
 from ..trait_types import FloatVector
 from .simulator import NumbaFuncParameter
@@ -131,6 +131,41 @@ class NCyclePulseStimulus(PulseStimulus):
             if (t - start) % period < width:
                 return space * amp
             return space * 0
+
+        return _numba_func
+
+
+class CustomPulseStimulus(Stimulus):
+    """自定义脉冲刺激, 由任意多个自定义脉冲序列组成
+
+    Attributes
+    ----------
+    series: array[float], shape (n_pulse, 3)
+        脉冲序列, 每一行由一个脉冲的(起始时刻, 终止时刻, 脉冲强度)组成,
+        同一时刻存在的多个脉冲会相互叠加, 脉冲持续时间不包含终止时刻
+
+    Examples
+    --------
+    >>> s = CustomPulseStimulus(series=[[1, 3, 1], [4, 5, 2], [0.5, 9.5, 0.1]])
+    >>> f = s.numba_func
+    >>> xs = np.linspace(0, 10, 11)
+    >>> print([f(x) for x in xs])
+    [0.0, 1.1, 1.1, 0.1, 2.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0]
+    """
+
+    series = Array(float, (None, 3))
+
+    numba_func = Property()
+
+    @property_depends_on(["space", "series"])
+    def _get_numba_func(self):
+        space = self.space
+        series = self.series
+
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            amp = np.sum(series[(t >= series[:, 0]) & (t < series[:, 1]), 2])
+            return space * amp
 
         return _numba_func
 
