@@ -171,3 +171,41 @@ class SinusoidStimulus(Stimulus):
             return space * amp * np.sin(2 * np.pi * freq * t + phase) + offset
 
         return _numba_func
+
+
+class GaussianStimulus(Stimulus):
+    """高斯函数刺激, 形如 :math:`amp * \\exp(- \\left(x - \\mu\\right) ^ 2 /
+    \\left(2 \\sigma^2\\right)) + offset`, 继承自 :py:class:`Stimulus`
+
+    Attributes
+    ----------
+    amp: float
+        刺激强度, by default 1
+    mu: float
+        高斯函数中心, by default 1
+    sigma: float
+        高斯函数标准差, by default 0.5
+    offset: float
+        直流偏置强度, by default 0
+    """
+
+    amp = Float(1)
+
+    mu = Float(2)
+
+    sigma = Float(0.5)
+
+    offset = Float(0)
+
+    numba_func = Property()
+
+    @property_depends_on(["space", "amp", "mu", "sigma", "offset"])
+    def _get_numba_func(self):
+        space = self.space
+        amp, mu, sigma, offset = self.amp, self.mu, self.sigma, self.offset
+
+        @nb.njit(inline="always")
+        def _numba_func(t: float):
+            return space * amp * np.exp(-((t - mu) ** 2) / (2 * sigma**2)) + offset
+
+        return _numba_func
