@@ -18,6 +18,16 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+__all__ = [
+    "Stimulus",
+    "PulseStimulus",
+    "NCyclePulseStimulus",
+    "CustomPulseStimulus",
+    "GaussianStimulus",
+    "SinusoidStimulus",
+]
+
+
 class Stimulus(NumbaFuncParameter):
     """刺激是用于激活或抑制大脑的电流, 可以由植入大脑或放置于头皮的电极直接提供,
     或通过向头部施加磁场来产生感应电流(TMS)
