@@ -8,6 +8,7 @@ from zjb.dos.data import Data
 
 from ..data.correlation import SpaceCorrelation
 from ..simulation.monitor import Monitor
+from ..simulation.simulator import NumbaFuncParameter
 from ..simulation.solver import EulerSolver, Solver
 from ..trait_types import FloatVector
 from .atlas import Atlas
@@ -16,6 +17,7 @@ from .dynamics_model import DynamicsModel
 
 class DynamicParameter:
     """动态参数类，用于表示数字孪生脑模型中被监听的动态参数"""
+
     @abstractmethod
     def __call__(
         self,
@@ -68,6 +70,7 @@ class DTBModel(Data):
     t : Float
         仿真时间。
     """
+
     name = Str()
 
     atlas = Instance(Atlas, required=True)
@@ -76,7 +79,7 @@ class DTBModel(Data):
 
     states = Dict(Str, Union(Float, FloatVector))
 
-    parameters = Dict(Str, Union(Float, FloatVector, Str))
+    parameters = Dict(Str, Union(Instance(NumbaFuncParameter), Float, FloatVector, Str))
 
     dynamic_parameters = OptionalInstance(DynamicParameter)
 
