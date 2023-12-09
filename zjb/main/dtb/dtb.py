@@ -11,7 +11,7 @@ from zjb.dos.data import Data
 
 from ..data.correlation import SpaceCorrelation
 from ..data.series import RegionalTimeSeries
-from ..simulation.simulator import Simulator
+from ..simulation.simulator import NumbaFuncParameter, Simulator
 from ..trait_types import FloatVector
 from .dtb_model import DTBModel
 from .subject import Subject
@@ -36,20 +36,21 @@ class DTB(Data):
     data : Dict
         存储仿真或分析的结果数据。
     """
+
     name = Str()
 
     subject = Instance(Subject, required=True)
 
     model = Instance(DTBModel, required=True)
 
-    parameters = Dict(Str, Union(Float, FloatVector, Str))
+    parameters = Dict(Str, Union(Instance(NumbaFuncParameter), Float, FloatVector, Str))
 
     connectivity = Instance(SpaceCorrelation, required=True)
 
     data = Dict(Str, TraitAny)
 
     def unbind(self):
-        """ 解绑模型中的数据。"""
+        """将DTB从数据管理器中解绑"""
         if not self._manager:
             return
         for data in self.data.values():
@@ -197,6 +198,7 @@ class SimulationResult(Data):
     parameters : Dict
         仿真过程中使用的参数。
     """
+
     data = List(Instance(RegionalTimeSeries))
 
     parameters = Dict(Str, Union(Float, FloatVector))
@@ -223,6 +225,7 @@ class PSEResult(Data):
     parameters : Dict
         PSE中使用的参数。
     """
+
     data = List(Instance(SimulationResult))
 
     parameters = Dict(Str, List(Union(Float, FloatVector)))
@@ -253,6 +256,7 @@ class AnalysisResult(Data):
     parameters : Dict
         分析过程中使用的分析方法的参数。
     """
+
     name = Str()
 
     origin = List()  # 由一个或多个源数据（共同)进行分析
