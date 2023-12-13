@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
@@ -34,7 +34,7 @@ _EXPR_TEMPLATE = Template(
 )
 
 
-class BUILTIN_PARAMETER(StrEnum):
+class BUILTIN_PARAMETER(str, Enum):  # 使用(str, Enum)替换(StrEnum)以兼容Python3.11之前的版本
     """内建参数, 仿真器内部预先定义的一些参数, 可以在表达式中直接使用这些参数"""
 
     t = "__t"
