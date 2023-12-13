@@ -2,6 +2,7 @@ from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
+import numpy as np
 from mako.template import Template
 from traits.api import Dict
 from traits.api import Enum as TraitEnum
@@ -19,9 +20,8 @@ from traits.api import (
 
 from zjb._traits.types import Instance, TraitCallable
 
-from ..data.correlation import SpaceCorrelation
 from ..dtb.dynamics_model import DynamicsModel
-from ..trait_types import FloatVector
+from ..trait_types import ArrayLike, FloatVector
 from .monitor import Monitor
 from .solver import EulerSolver, Solver
 
@@ -109,7 +109,7 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
 
     Attributes
     ----------
-    model : Instance(DynamicsModel)
+    model : DynamicsModel
         动力学模型实例，用于仿真。
     states : dict[str, float | array[float]], shape (n_regions)
         仿真器当前的状态变量字典
@@ -119,9 +119,9 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
         脑网络的连接矩阵
     solver : Solver
         求解器实例，用于数值求解仿真的微分方程。
-    monitors : List(Instance(Monitor))
+    monitors : list[Monitor]
         监视器列表，用于在仿真过程中采样数据。
-    t : Float
+    t : float
         仿真总时长。
     """
 
@@ -131,7 +131,7 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
 
     parameters = Dict(Str, Union(Instance(NumbaFuncParameter), Float, FloatVector))
 
-    connectivity = Instance(SpaceCorrelation, required=True)
+    connectivity = ArrayLike(required=True)
 
     solver = Instance(Solver, EulerSolver)
 
@@ -151,7 +151,7 @@ class Simulator(HasPrivateTraits, HasRequiredTraits):
         self._args = {
             "__t": self.t,
             "__dt": self.solver.dt,
-            "__C": self.connectivity.data,
+            "__C": np.asarray(self.connectivity, dtype=float),
         } | self.states
 
         self._env: dict[str, Any] = self._update_env_from_parameter({})
