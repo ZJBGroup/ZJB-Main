@@ -1,27 +1,27 @@
 import numpy as np
-from traits.api import Array, ArrayOrNone
+from traits.api import ArrayOrNone
 
 from zjb._traits.types import Instance
-from zjb.dos.data import Data
 
 from ..dtb.atlas import RegionSpace
+from .base import ArrayData
 from .space import Space
 
 
-class SpaceCorrelation(Data):
+class SpaceCorrelation(ArrayData):
     """空间相关, 特定空间内任意两个点之间的相关程度
+
+    空间相关是一个ArrayLike, 可以使用np.asarray或np.array获取空间相关的数据
 
     Attrs
     =====
     space: Space
         空间, 定义相关所在的空间
-    data: np.ndarray[space_shape+space_shape, dtype[float]]
+    data: array, shape (*space.shape,) + (*space.shape,)
         相关数组, 空间中任意两个点的相关程度
     """
 
     space = Instance(Space)
-
-    data = Array()
 
 
 class Connectivity(SpaceCorrelation):

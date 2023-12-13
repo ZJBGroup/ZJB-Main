@@ -2,12 +2,13 @@ import pickle
 from enum import Enum as ZJBEnum
 
 import numpy as np
-from traits.api import Array, Enum, Float, Int, Property, Str
+from traits.api import Enum, Float, Int, Property
 
 from zjb._traits.types import Instance
-from zjb.dos.data import Data
 from zjb.main.data.space import Space
-from zjb.main.dtb.atlas import Atlas, RegionSpace
+from zjb.main.dtb.atlas import RegionSpace
+
+from .base import ArrayData
 
 
 class TimeUnit(ZJBEnum):
@@ -31,23 +32,21 @@ class TimeUnit(ZJBEnum):
     SECOND = "s"
 
 
-class SpaceSeries(Data):
+class SpaceSeries(ArrayData):
     """
-       空间序列类。
+    空间序列类。
 
-       该类用于表示与空间相关的数据序列。
+    该类用于表示与空间相关的数据序列。
 
-       Attributes
-       ----------
-       space : Space
-           空间实例。
-       data : Array
-           包含空间序列数据的 NumPy 数组。
-       """
+    Attributes
+    ----------
+    space : Space
+        空间实例。
+    data : array
+        包含空间序列数据的 NumPy 数组。
+    """
 
     space = Instance(Space)
-
-    data = Array()
 
 
 class TimeSeries(SpaceSeries):

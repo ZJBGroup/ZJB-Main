@@ -4,16 +4,17 @@ import numpy as np
 from traits.api import Array
 
 from zjb._traits.types import Instance
-from zjb.dos.data import Data
 from zjb.main.data.space import SurfaceSpace, VolumeSpace
 from zjb.main.dtb.atlas import Atlas
 from zjb.main.trait_types import RequiredIntVector
+
+from .base import ArrayData
 
 if TYPE_CHECKING:
     from nibabel.gifti.gifti import GiftiImage
 
 
-class SurfaceRegionMapping(Data):
+class SurfaceRegionMapping(ArrayData):
     """
     表面区域映射类。该类用于创建和处理表面区域映射。
 
@@ -23,9 +24,10 @@ class SurfaceRegionMapping(Data):
         表面空间实例，表示数据所在的空间。
     atlas : Atlas
         图谱实例，用于区域映射。
-    data : RequiredIntVector
+    data : array[int] shape (n_nodes)
         整型向量表示的映射数据。
     """
+
     space = Instance(SurfaceSpace, required=True)
 
     atlas = Instance(Atlas, required=True)
@@ -108,7 +110,7 @@ class SurfaceRegionMapping(Data):
         return cls(space=space, atlas=atlas, data=mat)
 
 
-class VolumeRegionMapping(Data):
+class VolumeRegionMapping(ArrayData):
     """
     体素空间映射类。
 
@@ -120,9 +122,10 @@ class VolumeRegionMapping(Data):
         体素空间的实例。
     atlas : Atlas
         图谱的实例。
-    data : Array
+    data : array[int], shape (nx, ny, nz)
         包含映射数据的 NumPy 数组。
     """
+
     volume = Instance(VolumeSpace, required=True)
 
     atlas = Instance(Atlas, required=True)
