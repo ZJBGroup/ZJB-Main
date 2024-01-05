@@ -2,13 +2,14 @@ import pickle
 from enum import Enum as ZJBEnum
 
 import numpy as np
+from mne.io import RawArray
 from traits.api import Enum, Float, Int, Property
 
 from zjb._traits.types import Instance
-from zjb.main.data.space import Space
-from zjb.main.dtb.atlas import RegionSpace
-
 from .base import ArrayData
+from .space import SurfaceSpace
+from ..data.space import Space
+from ..dtb.atlas import RegionSpace
 
 
 class TimeUnit(ZJBEnum):
@@ -138,3 +139,24 @@ class RegionalTimeSeries(TimeSeries):
     """
 
     space = Instance(RegionSpace)
+
+
+class VertexalTimeSeries(TimeSeries):
+    """
+    顶点时间序列类。
+
+    该类继承自 TimeSeries，用于表示随时间变化的顶点数据序列。
+
+    Attributes
+    ----------
+    space : SurfaceSpace
+        表示皮层的空间实例。
+    """
+
+    space = Instance(SurfaceSpace)
+
+
+class MNEsimSeries(ArrayData):
+    """MNE仿真的数据"""
+
+    rawarray = Instance(RawArray)
