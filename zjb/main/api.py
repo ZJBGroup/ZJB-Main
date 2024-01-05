@@ -3,7 +3,13 @@ import zjb.main.analysis as zjb_analysis
 
 from .data.correlation import Connectivity, RegionalConnectivity, SpaceCorrelation
 from .data.regionmapping import SurfaceRegionMapping, VolumeRegionMapping
-from .data.series import RegionalTimeSeries, SpaceSeries, TimeSeries, TimeUnit
+from .data.series import (
+    RegionalTimeSeries,
+    SpaceSeries,
+    TimeSeries,
+    TimeUnit,
+    MNEsimSeries,
+)
 from .data.space import Space, Surface, Volume
 from .dtb.atlas import Atlas, RegionSpace
 from .dtb.dtb import DTB, AnalysisResult, PSEResult, SimulationResult
