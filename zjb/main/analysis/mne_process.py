@@ -6,9 +6,10 @@ from mne.io import Raw, RawArray
 from traits.api import Bool, HasPrivateTraits, HasRequiredTraits, Str, Union
 
 from zjb._traits.types import Instance
-from zjb.main.analysis.base import AnalyzerBase
-from zjb.main.data.regionmapping import SurfaceRegionMapping
-from zjb.main.data.series import RegionalTimeSeries
+from .base import AnalyzerBase
+from ..data.regionmapping import SurfaceRegionMapping
+from ..data.series import MNEsimSeries
+from ..data.series import RegionalTimeSeries
 
 
 class CreateMNESignals(HasPrivateTraits, HasRequiredTraits):
@@ -123,5 +124,7 @@ class CreateMNESignals(HasPrivateTraits, HasRequiredTraits):
         raw_sim = mne.simulation.simulate_raw(
             self.raw.info, stc, forward=self.fwd, verbose=True
         )
+        mne_sim_series = MNEsimSeries()
+        mne_sim_series.rawarray = raw_sim
 
-        return raw_sim
+        return mne_sim_series
