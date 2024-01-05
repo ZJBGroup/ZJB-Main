@@ -128,3 +128,46 @@ class CreateMNESignals(HasPrivateTraits, HasRequiredTraits):
         mne_sim_series.rawarray = raw_sim
 
         return mne_sim_series
+
+
+def create_mne_signals(
+    regional_ts: RegionalTimeSeries,
+    mapping: SurfaceRegionMapping,
+    fwd_path: str = "please input fwd file path, either fwd or src and bme file path must be entered",
+    raw_path: str = "please input raw file path",
+    src_path: str = "please input src file path, either fwd or src and bme file path must be entered",
+    bem_path: str = "please input bem file path, either fwd or src and bme file path must be entered",
+    tran: str = "fsaverage",
+    eeg: bool = True,
+    meg: bool = True,
+):
+    try:
+        mne.read_forward_solution(fwd_path)
+    except:
+        fwd_path = None
+    try:
+        mne.io.read_raw_fif(raw_path)
+    except:
+        raw_path = None
+    try:
+        mne.read_bem_solution(bem_path)
+    except:
+        bem_path = None
+    try:
+        mne.read_source_spaces(src_path)
+    except:
+        src_path = None
+
+    mne_signals_creator = CreateMNESignals(
+        regional_ts=regional_ts,
+        mapping=mapping,
+        fwd=fwd_path,
+        raw=raw_path,
+        src=src_path,
+        bem=bem_path,
+        tran=tran,
+        eeg=eeg,
+        meg=meg,
+    )
+    mne_sim_series = mne_signals_creator()
+    return mne_sim_series
