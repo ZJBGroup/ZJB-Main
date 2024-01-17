@@ -1,17 +1,16 @@
 from typing import Any
 
 from traits.api import List, Str
-
 from zjb._traits.types import Instance, TypedInstance
 from zjb.dos.data import Data
 
 from ..data.correlation import SpaceCorrelation
 from ..dtb.atlas import Atlas
-from ..dtb.dtb import DTB, AnalysisResult
+from ..dtb.dtb import DTB
 from ..dtb.dtb_model import DTBModel
 from ..dtb.dynamics_model import DynamicsModel
 from ..dtb.subject import Subject
-from ..simulation.monitor import Monitor, Raw
+from ..simulation.monitor import Raw
 
 ProjectInstance = TypedInstance["Project"]("Project", allow_none=False, module=__name__)  # type: ignore
 
@@ -37,6 +36,7 @@ class Project(Data):
     data : List
         项目中包含的其他数据，入分析结果等
     """
+
     name = Str()
 
     parent = ProjectInstance
@@ -83,13 +83,26 @@ class Project(Data):
 
         Returns
         -------
-        list[Subject]
+        list[DTBModel]
             可用DTB模型列表
         """
         models = self.models
         if parent := self.parent:
             models += parent.available_models()
         return models
+
+    def available_dtbs(self) -> list[DTB]:
+        """列出项目中所有可用的数字孪生脑(包括父项目中的可用数字孪生脑)
+
+        Returns
+        -------
+        list[DTB]
+            可用数字孪生脑列表
+        """
+        dtbs = self.dtbs
+        if parent := self.parent:
+            dtbs += parent.available_dtbs()
+        return dtbs
 
     def add_project(self, name: str, **kwargs: Any) -> "Project":
         """新建并添加一个子项目
