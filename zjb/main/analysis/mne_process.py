@@ -4,12 +4,11 @@ from mne import Forward, SourceSpaces
 from mne.bem import ConductorModel
 from mne.io import Raw, RawArray
 from traits.api import Bool, HasPrivateTraits, HasRequiredTraits, Str, Union
-
 from zjb._traits.types import Instance
-from .base import AnalyzerBase
+
 from ..data.regionmapping import SurfaceRegionMapping
-from ..data.series import MNEsimSeries
-from ..data.series import RegionalTimeSeries
+from ..data.series import MNEsimSeries, RegionalTimeSeries
+from .base import AnalyzerBase
 
 
 class CreateMNESignals(HasPrivateTraits, HasRequiredTraits):
@@ -133,11 +132,11 @@ class CreateMNESignals(HasPrivateTraits, HasRequiredTraits):
 def create_mne_signals(
     regional_ts: RegionalTimeSeries,
     mapping: SurfaceRegionMapping,
-    fwd_path: str = "please input fwd file path, either fwd or src and bme file path must be entered",
-    raw_path: str = "please input raw file path",
-    src_path: str = "please input src file path, either fwd or src and bme file path must be entered",
-    bem_path: str = "please input bem file path, either fwd or src and bme file path must be entered",
-    tran: str = "fsaverage",
+    fwd_path: str = "Path",
+    raw_path: str = "Path",
+    src_path: str = "Path",
+    bem_path: str = "Path",
+    trans: str = "fsaverage",
     eeg: bool = True,
     meg: bool = True,
 ):
@@ -165,7 +164,7 @@ def create_mne_signals(
         raw=raw_path,
         src=src_path,
         bem=bem_path,
-        tran=tran,
+        trans=trans,
         eeg=eeg,
         meg=meg,
     )
