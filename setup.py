@@ -15,6 +15,7 @@ setuptools.setup(
         "jaxlib",
         "matplotlib",
         "scikit-learn",
+        "mne",
     ],
     packages=setuptools.find_packages(),
     include_package_data=True,
