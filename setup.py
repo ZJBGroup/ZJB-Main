@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="zjb-main",
-    version="0.2.5",
+    version="0.2.6",
     description="Zhejiang Lab's digital twin brain platform",
     author="ZJB Group",
     url="https://github.com/ZJBGroup/ZJB-Main",
