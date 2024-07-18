@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import butter, correlate, detrend, filtfilt, hilbert, resample
+from scipy.signal import butter, filtfilt, hilbert
 from sklearn.manifold import SpectralEmbedding
 from traits.api import Array, Bool, Dict, Enum, Float, HasTraits, Instance, Int, Tuple
 

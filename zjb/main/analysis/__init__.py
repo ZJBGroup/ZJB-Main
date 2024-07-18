@@ -1,4 +1,5 @@
 from .custom import *
+from .dimensionality_reduction import *
 from .evaluation import *
 from .mne_process import *
 
