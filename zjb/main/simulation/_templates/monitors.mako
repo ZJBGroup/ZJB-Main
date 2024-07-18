@@ -1,5 +1,6 @@
 <%def name="raw_init(name, monitor, env)">
-${name} = np.zeros((__nt, __nr))
+__dtype = (${monitor.expression}).dtype
+${name} = np.zeros((__nt, __nr), dtype=__dtype)
 </%def>
 
 <%def name="raw_sample(name, monitor, env)">
@@ -7,7 +8,8 @@ ${name}[__it] = ${monitor.expression}
 </%def>
 
 <%def name="sub_sample_init(name, monitor, env)">
-${name} = np.zeros((int(__nt / ${monitor.sample_interval}), __nr))
+__dtype = (${monitor.expression}).dtype
+${name} = np.zeros((int(__nt / ${monitor.sample_interval}), __nr), dtype=__dtype)
 ${name}_i = 0
 </%def>
 
@@ -18,8 +20,9 @@ if __it % ${monitor.sample_interval} == ${monitor.sample_interval} - 1:
 </%def>
 
 <%def name="temporal_average_init(name, monitor, env)">
-${name} = np.zeros((int(__nt / ${monitor.sample_interval}), __nr))
-${name}_temp = 0
+__dtype = (${monitor.expression}).dtype
+${name} = np.zeros((int(__nt / ${monitor.sample_interval}), __nr), dtype=__dtype)
+${name}_temp = np.zeros((__nr,), dtype=__dtype)
 ${name}_i = 0
 </%def>
 
@@ -27,7 +30,7 @@ ${name}_i = 0
 ${name}_temp += ${monitor.expression}
 if __it % ${monitor.sample_interval} == ${monitor.sample_interval} - 1:
     ${name}[${name}_i] = ${name}_temp / ${monitor.sample_interval}
-    ${name}_temp = 0
+    ${name}_temp = np.zeros((__nr,), dtype=__dtype)
     ${name}_i += 1
 </%def>
 
